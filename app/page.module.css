@@ -295,6 +295,24 @@
   font-size: 14px;
 }
 
+/* "You have 2 expenses due for review this week." */
+.dueBanner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 12px 18px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  background: var(--pending-bg);
+  color: var(--pending-text);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .reviewBannerAction {
   font-weight: 600;
   color: var(--link);

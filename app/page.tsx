@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { categoryLabel, EXPENSE_COLUMNS, type Expense, type Status } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
+import { getReminders } from "@/lib/reminders";
 import { createClient } from "@/lib/supabase/server";
 import { weeklySeries } from "@/lib/series";
 import { Activity, PreviousFeedback } from "./activity";
@@ -35,12 +36,30 @@ async function Dashboard() {
   // This part is different for each visit (it checks who is signed in and the time).
   await connection();
   const user = await getCurrentUser();
+  const { reviewThisWeek, reviseThisWeek } = await getReminders(user);
 
   return (
     <>
       <ShowQueuedToast />
       <Header user={user} active="expenses" />
       <VerseCard />
+      {reviewThisWeek > 0 && (
+        <Link href="/calendar" className={styles.dueBanner}>
+          <span>
+            You have {reviewThisWeek} {reviewThisWeek === 1 ? "expense" : "expenses"} due for review this week.
+          </span>
+          <span className={styles.reviewBannerAction}>See calendar →</span>
+        </Link>
+      )}
+      {reviseThisWeek > 0 && (
+        <Link href="/calendar" className={styles.dueBanner}>
+          <span>
+            You have {reviseThisWeek} rejected {reviseThisWeek === 1 ? "expense" : "expenses"} to revise this
+            week.
+          </span>
+          <span className={styles.reviewBannerAction}>See calendar →</span>
+        </Link>
+      )}
       <div className={styles.toolbar}>
         <h2 className={styles.heading}>
           {user.role === "approver" ? "All expenses" : "My expenses"}

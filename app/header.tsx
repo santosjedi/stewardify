@@ -1,9 +1,12 @@
 import Link from "next/link";
 import type { CurrentUser } from "@/lib/auth";
+import { formatDate, formatDateTime } from "@/lib/format";
+import { getReminders } from "@/lib/reminders";
 import { signOut } from "./auth/actions";
 import { initials } from "./expense-detail";
 import { Icon } from "./icons";
 import { Logo } from "./logo";
+import { Bell } from "./reminders/bell";
 import styles from "./page.module.css";
 
 export type Page = "expenses" | "submit" | "calendar" | "dashboard" | "approvals" | "history";
@@ -20,7 +23,16 @@ function greeting(now: Date) {
 
 // The sidebar (a bottom bar on phones) and the friendly page header.
 // Only pages that exist are listed; approvers also get the queue and history.
-export function Header({ user, active }: { user: CurrentUser; active: Page }) {
+export async function Header({ user, active }: { user: CurrentUser; active: Page }) {
+  const { reminders } = await getReminders(user);
+  const shown = reminders.map((r) => ({
+    ...r,
+    when:
+      r.kind === "decided"
+        ? `${r.status === "approved" ? "Approved" : "Rejected"} · ${formatDateTime(r.date)}`
+        : `${r.overdue ? "Overdue · " : ""}${r.kind === "review" ? "Needed by" : "Revise by"} ${formatDate(r.date)}`,
+  }));
+
   const now = new Date();
   const today = now.toLocaleDateString("en-US", {
     weekday: "long",
@@ -74,6 +86,7 @@ export function Header({ user, active }: { user: CurrentUser; active: Page }) {
           </h1>
         </div>
         <div className={styles.user}>
+          <Bell reminders={shown} />
           <span className={styles.avatar} aria-hidden="true">
             {initials(user.fullName)}
           </span>
