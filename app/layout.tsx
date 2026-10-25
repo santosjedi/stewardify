@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Epilogue, Fraunces } from "next/font/google";
 import "./globals.css";
 
-// The church brand font, loaded by Next.js itself.
-const sans = Montserrat({
-  variable: "--font-sans",
+// Fraunces for headings and big numbers (with its "soft" rounded style available),
+// Epilogue for everything else. Both are loaded by Next.js itself.
+const heading = Fraunces({
+  variable: "--font-heading",
+  subsets: ["latin"],
+  axes: ["SOFT"],
+});
+
+const body = Epilogue({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
@@ -15,7 +22,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={sans.variable}>
+    <html lang="en" className={`${heading.variable} ${body.variable}`}>
       <body>{children}</body>
     </html>
   );

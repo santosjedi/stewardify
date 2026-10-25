@@ -62,7 +62,13 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
 
       <label className={styles.field}>
         Description
-        <input name="description" type="text" maxLength={200} required />
+        <input
+          name="description"
+          type="text"
+          maxLength={200}
+          placeholder="e.g. Fare for home visits in Rizal"
+          required
+        />
       </label>
 
       <div className={styles.row}>
@@ -82,7 +88,15 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
 
         <label className={styles.field}>
           Amount (₱)
-          <input name="amount" type="number" inputMode="decimal" min="0.01" step="0.01" required />
+          <input
+            name="amount"
+            type="number"
+            inputMode="decimal"
+            min="0.01"
+            step="0.01"
+            placeholder="0.00"
+            required
+          />
         </label>
       </div>
 
@@ -90,7 +104,12 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
         <span>
           Note <span className={styles.optional}>(optional)</span>
         </span>
-        <textarea name="note" rows={3} maxLength={1000} />
+        <textarea
+          name="note"
+          rows={3}
+          maxLength={1000}
+          placeholder="Anything the approver should know"
+        />
       </label>
 
       <label className={styles.field}>

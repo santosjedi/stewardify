@@ -1,17 +1,18 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px;
+  gap: 20px;
+  padding: 28px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 20px;
 }
 
 .field {
@@ -20,24 +21,55 @@
   gap: 6px;
   min-width: 0;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--foreground);
 }
 
 .field input,
 .field select,
 .field textarea {
   width: 100%;
-  padding: 10px 12px;
+  padding: 11px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--background);
+  border-radius: 10px;
+  background: var(--surface);
   color: var(--foreground);
-  font: inherit;
   font-weight: 400;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+/* The receipt picker: a dashed drop area */
 .field input[type="file"] {
-  padding: 8px;
+  padding: 14px;
+  border-style: dashed;
+  border-color: var(--blue);
+  background: var(--background);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.field input[type="file"]::file-selector-button {
+  margin-right: 12px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--foreground);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .optional {
@@ -46,10 +78,10 @@
 }
 
 .error {
-  color: var(--rejected-text);
+  padding: 10px 14px;
+  border-radius: 10px;
   background: var(--rejected-bg);
-  padding: 10px 12px;
-  border-radius: 8px;
+  color: var(--rejected-text);
   font-size: 14px;
 }
 
@@ -58,27 +90,42 @@
   justify-content: flex-end;
   align-items: center;
   gap: 12px;
+  padding-top: 4px;
 }
 
 .cancel {
-  padding: 10px 14px;
+  padding: 11px 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--foreground);
   font-size: 14px;
-  color: var(--muted);
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.cancel:hover {
+  background: var(--background);
 }
 
 .submit {
-  padding: 11px 18px;
+  padding: 11px 22px;
   border: none;
-  border-radius: 8px;
-  background: var(--foreground);
-  color: var(--background);
-  font: inherit;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s;
+}
+
+.submit:hover {
+  background: var(--primary-hover);
 }
 
 .submit:disabled {
-  opacity: 0.6;
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
   cursor: default;
 }
 
@@ -89,5 +136,10 @@
 
   .row {
     grid-template-columns: 1fr;
+  }
+
+  .actions > * {
+    flex: 1;
+    text-align: center;
   }
 }

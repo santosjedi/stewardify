@@ -1,65 +1,46 @@
-/* Stewardify colors, from the church brand:
-   navy #16303D and blue #2483C5, with golden yellow #FCC715 and orange #F4923D as warm accents. */
+/* Stewardify colors, all in one place. Light mode only. */
 :root {
-  --background: #f7f9fb;
-  --foreground: #16303d;
+  color-scheme: light;
+
+  --background: #f8fafc;
   --surface: #ffffff;
-  --surface-muted: #eef3f7;
-  --border: #e1e8ee;
-  --muted: #5e7380;
+  --surface-muted: #f1f5f9;
+  --border: #e2e8f0;
+  --foreground: #0f172a;
+  --muted: #475569;
+  --placeholder: #64748b;
 
-  --navy: #16303d;
-  --primary: #2483c5;
-  --primary-hover: #1d6fa8;
+  --primary: #1e4e79;
+  --primary-hover: #173d60;
   --on-primary: #ffffff;
-  --primary-soft: #e5f1fa;
-  --header-gradient: linear-gradient(120deg, #2483c5 0%, #1d5e8c 45%, #16303d 100%);
+  --link: #1d6fa8;
+  --blue: #2483c5; /* icons, borders, and large headings only, never small text */
 
-  --accent: #fcc715;
-  --accent-hover: #f0b800;
-  --on-accent: #16303d;
-  --orange: #f4923d;
-  --orange-soft: #fdeddf;
-  --orange-text: #a8530f;
+  --band: #16303d;
+  --band-text: #ffffff;
+  --band-accent: #fcc715;
 
-  --pending-bg: #fff4cc;
-  --pending-text: #7a5600;
-  --approved-bg: #e3f4ea;
-  --approved-text: #1e7a4c;
-  --rejected-bg: #fde7e4;
-  --rejected-text: #b2382b;
+  --gold: #fcc715;
+  --gold-hover: #ebb800;
+  --on-gold: #0f172a;
+  --orange: #f4923d; /* borders and decorations only, never text */
 
-  --radius: 14px;
-  --radius-lg: 20px;
-  --shadow: 0 1px 2px rgba(22, 48, 61, 0.05), 0 6px 20px rgba(22, 48, 61, 0.06);
-}
+  --pending-bg: #fef3c7;
+  --pending-text: #92400e;
+  --approved-bg: #dcfce7;
+  --approved-text: #166534;
+  --rejected-bg: #fee2e2;
+  --rejected-text: #991b1b;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0d1b22;
-    --foreground: #eaf1f5;
-    --surface: #142832;
-    --surface-muted: #1b3440;
-    --border: #24414f;
-    --muted: #9db2be;
+  --disabled-bg: #cbd5e1;
+  --disabled-text: #334155;
 
-    --primary: #4fa6e0;
-    --primary-hover: #6db7e8;
-    --on-primary: #0b1a22;
-    --primary-soft: #15344a;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.05);
 
-    --orange-soft: #3a2614;
-    --orange-text: #f4a35c;
-
-    --pending-bg: #3b3210;
-    --pending-text: #fcd34d;
-    --approved-bg: #143424;
-    --approved-text: #86d6a8;
-    --rejected-bg: #3c1d19;
-    --rejected-text: #f4a497;
-
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
-  }
+  --font-heading-family: var(--font-heading), Georgia, serif;
+  --font-body-family: var(--font-body), system-ui, sans-serif;
 }
 
 html {
@@ -78,8 +59,8 @@ body {
   flex-direction: column;
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  line-height: 1.45;
+  font-family: var(--font-body-family);
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -95,14 +76,26 @@ a {
   text-decoration: none;
 }
 
+/* Headings use Fraunces: semi-bold, with its soft rounded style turned all the way up. */
 h1,
 h2,
 h3 {
-  font-weight: 700;
+  font-family: var(--font-heading-family);
+  font-weight: 600;
+  font-variation-settings: "SOFT" 100;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
 }

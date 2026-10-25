@@ -1,30 +1,107 @@
+/* Welcome panel on the left, form on the right. Stacked on phones. */
 .main {
-  display: flex;
   flex: 1;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
   padding: 32px 16px;
 }
+
+/* ---------- Welcome panel (the navy band) ---------- */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  padding: 40px 36px;
+  border-radius: var(--radius-lg);
+  background: var(--band);
+  color: var(--band-text);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brandName {
+  font-family: var(--font-heading-family);
+  font-size: 21px;
+  font-weight: 600;
+  font-variation-settings: "SOFT" 100;
+}
+
+.headline {
+  font-size: 40px;
+  line-height: 1.12;
+}
+
+.accent {
+  color: var(--band-accent);
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+  font-size: 15px;
+}
+
+.points li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* A gold check before each point */
+.points li::before {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--band);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ---------- The form ---------- */
 
 .card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  max-width: 380px;
-  padding: 28px 24px;
+  justify-content: center;
+  gap: 18px;
+  padding: 40px 36px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
-.brand {
-  font-size: 22px;
+.cardHeading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
 .title {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 28px;
+}
+
+.subtitle {
+  font-size: 14px;
   color: var(--muted);
 }
 
@@ -33,49 +110,63 @@
   flex-direction: column;
   gap: 6px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--foreground);
 }
 
 .field input {
-  padding: 10px 12px;
+  padding: 11px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--background);
+  border-radius: 10px;
+  background: var(--surface);
   color: var(--foreground);
-  font: inherit;
   font-weight: 400;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
 }
 
 .button {
-  padding: 11px;
+  margin-top: 4px;
+  padding: 12px;
   border: none;
-  border-radius: 8px;
-  background: var(--foreground);
-  color: var(--background);
-  font: inherit;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--on-primary);
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s;
+}
+
+.button:hover {
+  background: var(--primary-hover);
 }
 
 .button:disabled {
-  opacity: 0.6;
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
   cursor: default;
 }
 
-.error {
-  color: var(--rejected-text);
-  background: var(--rejected-bg);
-  padding: 10px 12px;
-  border-radius: 8px;
+.error,
+.success {
+  padding: 10px 14px;
+  border-radius: 10px;
   font-size: 14px;
 }
 
+.error {
+  background: var(--rejected-bg);
+  color: var(--rejected-text);
+}
+
 .success {
-  color: var(--approved-text);
   background: var(--approved-bg);
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 14px;
+  color: var(--approved-text);
 }
 
 .switch {
@@ -85,6 +176,31 @@
 }
 
 .switch a {
-  color: var(--foreground);
+  color: var(--link);
+  font-weight: 600;
   text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 760px) {
+  .main {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .hero {
+    gap: 18px;
+    padding: 28px 24px;
+  }
+
+  .headline {
+    font-size: 30px;
+  }
+
+  .card {
+    padding: 28px 22px;
+  }
 }

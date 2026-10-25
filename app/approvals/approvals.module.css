@@ -3,47 +3,54 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 
 /* Queue / History tabs */
 .tabs {
   display: flex;
-  gap: 4px;
-  margin-bottom: 16px;
+  gap: 8px;
+  margin-bottom: 20px;
   border-bottom: 1px solid var(--border);
 }
 
 .tab,
 .tabActive {
-  padding: 8px 12px;
+  padding: 10px 4px;
+  margin-right: 12px;
   margin-bottom: -1px;
-  border-bottom: 2px solid transparent;
-  font-size: 14px;
+  border-bottom: 3px solid transparent;
+  font-size: 15px;
+  font-weight: 500;
   color: var(--muted);
+  transition: color 0.15s;
+}
+
+.tab:hover {
+  color: var(--foreground);
 }
 
 .tabActive {
-  border-bottom-color: var(--foreground);
+  border-bottom-color: var(--blue);
   color: var(--foreground);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* One card per expense */
 .list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   list-style: none;
 }
 
 .item {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 16px;
+  gap: 16px;
+  padding: 20px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
 }
 
@@ -54,15 +61,27 @@
 }
 
 .note {
+  margin-top: 4px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--background);
   font-size: 13px;
   color: var(--foreground);
 }
 
 .ownNotice,
 .reviewLine {
-  padding-top: 12px;
+  padding-top: 14px;
   border-top: 1px solid var(--border);
   font-size: 13px;
+  color: var(--muted);
+}
+
+.ownNotice {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: var(--surface-muted);
   color: var(--muted);
 }
 
@@ -70,26 +89,32 @@
 .reviewForm {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-top: 14px;
+  gap: 12px;
+  padding-top: 16px;
   border-top: 1px solid var(--border);
 }
 
 .commentBox {
   width: 100%;
-  padding: 10px 12px;
+  padding: 11px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--background);
+  border-radius: 10px;
+  background: var(--surface);
   color: var(--foreground);
-  font: inherit;
   font-size: 14px;
   resize: vertical;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.commentBox:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
 }
 
 .error {
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
   background: var(--rejected-bg);
   color: var(--rejected-text);
   font-size: 13px;
@@ -103,33 +128,47 @@
 
 .approve,
 .reject {
-  padding: 9px 16px;
-  border-radius: 8px;
-  font: inherit;
+  padding: 10px 20px;
+  border-radius: 999px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s;
 }
 
 .approve {
-  border: 1px solid var(--approved-text);
-  background: var(--approved-bg);
-  color: var(--approved-text);
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.approve:hover {
+  background: var(--primary-hover);
 }
 
 .reject {
   border: 1px solid var(--rejected-text);
-  background: var(--rejected-bg);
+  background: var(--surface);
   color: var(--rejected-text);
+}
+
+.reject:hover {
+  background: var(--rejected-bg);
 }
 
 .approve:disabled,
 .reject:disabled {
-  opacity: 0.6;
+  border-color: var(--disabled-bg);
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
   cursor: default;
 }
 
 @media (max-width: 560px) {
+  .item {
+    padding: 16px;
+  }
+
   .buttons > button {
     flex: 1;
   }

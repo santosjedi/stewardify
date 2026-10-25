@@ -44,13 +44,16 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
   return (
     <>
       <Header user={user} active="approvals" />
+      <div className={pageStyles.toolbar}>
+        <h2 className={pageStyles.heading}>Approval queue</h2>
+      </div>
 
       <section className={styles.summary}>
-        <div className={pageStyles.card}>
+        <div className={`${pageStyles.card} ${pageStyles.cardPending}`}>
           <span className={pageStyles.cardLabel}>Total pending</span>
           <span className={pageStyles.cardValue}>{pesos.format(sum(pending))}</span>
         </div>
-        <div className={pageStyles.card}>
+        <div className={`${pageStyles.card} ${pageStyles.cardApproved}`}>
           <span className={pageStyles.cardLabel}>Total approved</span>
           <span className={pageStyles.cardValue}>
             {pesos.format(sum(expenses.filter((e) => e.status === "approved")))}

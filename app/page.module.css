@@ -1,11 +1,12 @@
 .main {
   width: 100%;
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 32px 16px;
+  padding: 24px 16px 48px;
 }
 
-/* Header: a blue-to-navy band with the logo, links, and who is signed in */
+/* ---------- Header: the navy band ---------- */
+
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -15,8 +16,8 @@
   margin-bottom: 36px;
   padding: 14px 16px 14px 18px;
   border-radius: var(--radius-lg);
-  background: var(--header-gradient);
-  color: #ffffff;
+  background: var(--band);
+  color: var(--band-text);
   box-shadow: var(--shadow);
 }
 
@@ -39,51 +40,47 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: var(--accent);
-  color: var(--navy);
+  background: var(--gold);
+  color: var(--band);
 }
 
 .brandName {
-  font-size: 18px;
-  font-weight: 700;
+  font-family: var(--font-heading-family);
+  font-size: 21px;
+  font-weight: 600;
+  font-variation-settings: "SOFT" 100;
   letter-spacing: -0.01em;
 }
 
-/* Page titles (e.g. "Submit expense") */
-.title {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin-bottom: 24px;
-}
-
-/* Links between pages (approvers only): a pill switcher on the blue band */
+/* Links between pages (approvers only): a pill switcher on the band */
 .nav {
   display: flex;
   gap: 2px;
   padding: 3px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  font-size: 13px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 14px;
 }
 
 .navLink,
 .navActive {
   padding: 6px 14px;
   border-radius: 999px;
-  color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
-  transition: color 0.15s, background 0.15s;
+  transition: background 0.15s;
+}
+
+.navLink {
+  color: var(--band-text);
 }
 
 .navLink:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .navActive {
-  background: #ffffff;
-  color: var(--navy);
+  background: var(--surface);
+  color: var(--foreground);
   font-weight: 600;
 }
 
@@ -101,8 +98,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--accent);
-  color: var(--navy);
+  background: var(--gold);
+  color: var(--on-gold);
   font-size: 13px;
   font-weight: 700;
 }
@@ -119,45 +116,34 @@
 
 .role {
   font-size: 12px;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+  color: var(--band-accent);
   text-transform: capitalize;
 }
 
 .signOut {
   margin-left: 6px;
   padding: 7px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   border-radius: 999px;
   background: transparent;
-  color: #ffffff;
-  font: inherit;
+  color: var(--band-text);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s;
 }
 
 .signOut:hover {
   background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* Phones: logo and links on one line, the person on the next */
-@media (max-width: 560px) {
-  .header {
-    margin-bottom: 28px;
-  }
+/* ---------- Page titles and the toolbar ---------- */
 
-  .user {
-    width: 100%;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-  }
-
-  .signOut {
-    margin-left: auto;
-  }
+/* Page titles (e.g. "Submit expense") */
+.title {
+  font-size: 30px;
+  margin-bottom: 24px;
 }
 
 /* "My expenses" heading with the Submit button */
@@ -166,20 +152,18 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .heading {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: 28px;
 }
 
 .newButton {
-  padding: 10px 18px;
+  padding: 11px 20px;
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--gold);
+  color: var(--on-gold);
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
@@ -187,7 +171,7 @@
 }
 
 .newButton:hover {
-  background: var(--accent-hover);
+  background: var(--gold-hover);
 }
 
 /* Approvers: "2 expenses are waiting for review" */
@@ -197,60 +181,92 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 16px;
-  padding: 12px 16px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
   border-left: 4px solid var(--orange);
   border-radius: var(--radius);
-  background: var(--orange-soft);
-  color: var(--foreground);
+  background: var(--surface);
   font-size: 14px;
 }
 
 .reviewBannerAction {
   font-weight: 600;
-  color: var(--orange-text);
+  color: var(--link);
 }
 
 .message {
+  padding: 32px 0;
   color: var(--muted);
-  padding: 24px 0;
+  text-align: center;
 }
 
-/* Summary cards at the top */
+/* ---------- Stat cards ---------- */
+
 .summary {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 16px;
+  gap: 6px;
+  padding: 16px 18px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius);
   background: var(--surface);
 }
 
 .cardLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
+  font-weight: 500;
   color: var(--muted);
 }
 
-.cardValue {
-  font-size: 20px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+/* A small colored dot before each label */
+.cardLabel::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
 }
 
-/* Expense list */
+.cardPending .cardLabel::before {
+  background: var(--gold);
+}
+
+.cardApproved .cardLabel::before {
+  background: var(--approved-text);
+}
+
+.cardRejected .cardLabel::before {
+  background: var(--rejected-text);
+}
+
+.cardValue {
+  font-family: var(--font-heading-family);
+  font-size: 28px;
+  font-weight: 600;
+  font-variation-settings: "SOFT" 100;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.15;
+}
+
+/* ---------- Expense list ---------- */
+
 .list {
   list-style: none;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: var(--surface);
+  overflow: hidden;
 }
 
 .row {
@@ -258,7 +274,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px 16px;
+  padding: 16px 18px;
+  transition: background 0.15s;
+}
+
+.row:hover {
+  background: var(--background);
 }
 
 .row + .row {
@@ -274,7 +295,7 @@
 }
 
 .description {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .meta {
@@ -287,6 +308,9 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  margin-top: 4px;
+  padding-left: 10px;
+  border-left: 2px solid var(--border);
   font-size: 13px;
   color: var(--muted);
 }
@@ -305,13 +329,13 @@
 }
 
 .amount {
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 /* Status badges */
 .badge {
-  padding: 2px 10px;
+  padding: 3px 10px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
@@ -333,21 +357,27 @@
   color: var(--rejected-text);
 }
 
-/* Receipt thumbnail and the larger view */
+/* ---------- Receipt thumbnail and the larger view ---------- */
+
 .thumbnailButton {
   flex-shrink: 0;
   padding: 0;
   border: 1px solid var(--border);
-  border-radius: 6px;
-  background: none;
+  border-radius: 10px;
+  background: var(--surface-muted);
   overflow: hidden;
   cursor: zoom-in;
+  transition: border-color 0.15s;
+}
+
+.thumbnailButton:hover {
+  border-color: var(--blue);
 }
 
 .thumbnail {
   display: block;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
 }
 
@@ -362,14 +392,14 @@
 }
 
 .viewer::backdrop {
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(15, 23, 42, 0.8);
 }
 
 .viewerImage {
   display: block;
   max-width: 92vw;
   max-height: 85vh;
-  border-radius: 8px;
+  border-radius: var(--radius);
 }
 
 .viewerHint {
@@ -379,9 +409,37 @@
   color: #ffffff;
 }
 
-/* Phones: summary cards in two rows of two */
+/* ---------- Phones ---------- */
+
 @media (max-width: 560px) {
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .user {
+    width: 100%;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .signOut {
+    margin-left: auto;
+  }
+
+  .heading {
+    font-size: 24px;
+  }
+
   .summary {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cardValue {
+    font-size: 24px;
+  }
+
+  .row {
+    align-items: flex-start;
+    padding: 14px;
   }
 }

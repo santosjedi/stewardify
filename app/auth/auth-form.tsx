@@ -2,29 +2,50 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { Logo } from "../logo";
 import { signIn, signUp } from "./actions";
 import styles from "./auth.module.css";
 
-// The sign-in and sign-up form. Sign up also asks for a full name.
+// The sign-in and sign-up page: a welcome panel next to the form.
+// Sign up also asks for a full name.
 export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
   const isSignUp = mode === "signup";
   const [state, formAction, pending] = useActionState(isSignUp ? signUp : signIn, null);
 
   return (
     <main className={styles.main}>
+      <section className={styles.hero}>
+        <div className={styles.brand}>
+          <Logo />
+          <span className={styles.brandName}>Stewardify</span>
+        </div>
+        <h1 className={styles.headline}>
+          Simple, honest expense tracking <span className={styles.accent}>for ministries.</span>
+        </h1>
+        <ul className={styles.points}>
+          <li>Submit an expense and receipt in a minute</li>
+          <li>Approvers review with one click</li>
+          <li>Everyone sees where things stand</li>
+        </ul>
+      </section>
+
       <form action={formAction} className={styles.card}>
-        <h1 className={styles.brand}>Stewardify</h1>
-        <h2 className={styles.title}>{isSignUp ? "Create your account" : "Sign in"}</h2>
+        <div className={styles.cardHeading}>
+          <h2 className={styles.title}>{isSignUp ? "Create your account" : "Welcome back"}</h2>
+          <p className={styles.subtitle}>
+            {isSignUp ? "It only takes a moment." : "Sign in to continue to Stewardify."}
+          </p>
+        </div>
 
         {isSignUp && (
           <label className={styles.field}>
             Full name
-            <input name="fullName" type="text" autoComplete="name" required />
+            <input name="fullName" type="text" autoComplete="name" placeholder="Juan dela Cruz" required />
           </label>
         )}
         <label className={styles.field}>
           Email
-          <input name="email" type="email" autoComplete="email" required />
+          <input name="email" type="email" autoComplete="email" placeholder="you@example.com" required />
         </label>
         <label className={styles.field}>
           Password
@@ -32,6 +53,7 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
             name="password"
             type="password"
             autoComplete={isSignUp ? "new-password" : "current-password"}
+            placeholder={isSignUp ? "At least 6 characters" : "Your password"}
             minLength={6}
             required
           />
@@ -41,7 +63,7 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
         {state?.message && <p className={styles.success}>{state.message}</p>}
 
         <button type="submit" className={styles.button} disabled={pending}>
-          {pending ? "Please wait…" : isSignUp ? "Sign up" : "Sign in"}
+          {pending ? "Please wait…" : isSignUp ? "Create account" : "Sign in"}
         </button>
 
         <p className={styles.switch}>

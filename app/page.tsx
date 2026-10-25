@@ -75,15 +75,15 @@ async function Expenses({ showSubmitter }: { showSubmitter: boolean }) {
           <span className={styles.cardLabel}>Total</span>
           <span className={styles.cardValue}>{pesos.format(total)}</span>
         </div>
-        <div className={styles.card}>
+        <div className={`${styles.card} ${styles.cardPending}`}>
           <span className={styles.cardLabel}>Pending</span>
           <span className={styles.cardValue}>{count("pending")}</span>
         </div>
-        <div className={styles.card}>
+        <div className={`${styles.card} ${styles.cardApproved}`}>
           <span className={styles.cardLabel}>Approved</span>
           <span className={styles.cardValue}>{count("approved")}</span>
         </div>
-        <div className={styles.card}>
+        <div className={`${styles.card} ${styles.cardRejected}`}>
           <span className={styles.cardLabel}>Rejected</span>
           <span className={styles.cardValue}>{count("rejected")}</span>
         </div>
