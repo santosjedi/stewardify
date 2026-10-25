@@ -193,6 +193,56 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
+/* ---------- Reminder of the day: slim card with a gold line on the left ---------- */
+
+.verse {
+  margin: -12px 0 28px;
+  padding: 14px 18px 12px 20px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius);
+  background: var(--surface);
+  animation: verseIn 0.8s ease-out;
+}
+
+@keyframes verseIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.verseLabel {
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.verseText {
+  font-family: var(--font-heading-family);
+  font-size: 17px;
+  font-style: italic;
+  font-weight: 500;
+  font-variation-settings: "SOFT" 100;
+  line-height: 1.4;
+  color: var(--foreground);
+}
+
+.verseSource {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verse {
+    animation: none;
+  }
+}
+
 /* ---------- Page titles and the toolbar ---------- */
 
 /* Page titles (e.g. "Submit expense") */

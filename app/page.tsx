@@ -16,6 +16,7 @@ import { Header } from "./header";
 import { categoryIcon, Icon } from "./icons";
 import { ReceiptThumbnail } from "./receipt-thumbnail";
 import { StatCard } from "./stat-card";
+import { VerseCard } from "./verse-card";
 import { PageSkeleton } from "./skeleton";
 import styles from "./page.module.css";
 
@@ -38,6 +39,7 @@ async function Dashboard() {
     <>
       <ShowQueuedToast />
       <Header user={user} active="expenses" />
+      <VerseCard />
       <div className={styles.toolbar}>
         <h2 className={styles.heading}>
           {user.role === "approver" ? "All expenses" : "My expenses"}
