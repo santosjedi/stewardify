@@ -7,13 +7,14 @@ import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
 import { Header } from "../../../header";
 import { ExpenseForm } from "../../new/expense-form";
+import { PageSkeleton } from "../../../skeleton";
 import styles from "../../../page.module.css";
 
 // Fix a rejected expense and send it back for review.
 export default function EditExpensePage({ params }: { params: Promise<{ id: string }> }) {
   return (
     <main className={styles.main}>
-      <Suspense fallback={<p className={styles.message}>Loading…</p>}>
+      <Suspense fallback={<PageSkeleton cards={0} rows={2} />}>
         <EditExpense params={params} />
       </Suspense>
     </main>

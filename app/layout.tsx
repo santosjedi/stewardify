@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Epilogue, Fraunces } from "next/font/google";
+import { Toaster } from "./feedback";
 import "./globals.css";
 
 // Fraunces for headings and big numbers (with its "soft" rounded style available),
@@ -23,7 +24,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${heading.variable} ${body.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { BeforeAfter, ParallaxShape, shapeStyles, TryItDemo } from "./landing-extras";
 import styles from "./auth.module.css";
 
 // Fades and slides its content in the first time it scrolls into view.
@@ -117,6 +118,7 @@ const STEPS = [
 export function HowItWorks() {
   return (
     <Reveal className={styles.section}>
+      <ParallaxShape className={`${shapeStyles.blue} ${shapeStyles.right}`} speed={0.12} />
       <h2 className={styles.sectionTitle}>How it works</h2>
       <ol className={styles.steps}>
         {STEPS.map((step, index) => (
@@ -151,6 +153,7 @@ const FEATURES = [
 export function Features() {
   return (
     <Reveal className={styles.section}>
+      <ParallaxShape className={`${shapeStyles.gold} ${shapeStyles.right}`} speed={0.15} />
       <h2 className={styles.sectionTitle}>Made for ministry teams</h2>
       <div className={styles.features}>
         {FEATURES.map((feature) => (
@@ -175,6 +178,28 @@ export function Features() {
           </div>
         ))}
       </div>
+    </Reveal>
+  );
+}
+
+export function TryIt() {
+  return (
+    <Reveal className={styles.section}>
+      <ParallaxShape className={`${shapeStyles.gold} ${shapeStyles.left}`} speed={0.18} />
+      <h2 className={styles.sectionTitle}>Try it yourself</h2>
+      <p className={styles.sectionLead}>Be the approver for a moment.</p>
+      <TryItDemo />
+    </Reveal>
+  );
+}
+
+export function Compare() {
+  return (
+    <Reveal className={styles.section}>
+      <ParallaxShape className={`${shapeStyles.blue} ${shapeStyles.left}`} speed={0.12} />
+      <h2 className={styles.sectionTitle}>See the difference</h2>
+      <p className={styles.sectionLead}>Drag the handle to compare.</p>
+      <BeforeAfter />
     </Reveal>
   );
 }

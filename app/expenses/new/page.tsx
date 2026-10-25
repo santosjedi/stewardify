@@ -3,12 +3,13 @@ import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { Header } from "../../header";
 import { ExpenseForm } from "./expense-form";
+import { PageSkeleton } from "../../skeleton";
 import styles from "../../page.module.css";
 
 export default function NewExpensePage() {
   return (
     <main className={styles.main}>
-      <Suspense fallback={<p className={styles.message}>Loading…</p>}>
+      <Suspense fallback={<PageSkeleton cards={0} rows={2} />}>
         <NewExpense />
       </Suspense>
     </main>

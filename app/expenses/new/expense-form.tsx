@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition, type FormEvent } from "react";
+import { useEffect, useRef, useState, useTransition, type DragEvent, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { CATEGORIES, MAX_CATEGORY_OTHER, MAX_RECEIPT_BYTES, RECEIPT_TYPES } from "@/lib/expenses";
+import { clearQueuedToast, queueToast, Spinner } from "../../feedback";
 import { createExpense, resubmitExpense } from "./actions";
 import styles from "./expense-form.module.css";
 
@@ -31,6 +32,30 @@ export function ExpenseForm({
 }) {
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [dragging, setDragging] = useState(false);
+
+  // Free the preview image's memory when it's replaced or the form closes.
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
+  function showPreview(file: File | undefined) {
+    setPreview(file && RECEIPT_TYPES.includes(file.type) ? URL.createObjectURL(file) : null);
+  }
+
+  // Dropping a photo puts it into the normal file picker, so saving works the same way.
+  function handleDrop(event: DragEvent<HTMLLabelElement>) {
+    event.preventDefault();
+    setDragging(false);
+    const input = fileRef.current;
+    if (!input || event.dataTransfer.files.length === 0) return;
+    input.files = event.dataTransfer.files;
+    showPreview(input.files[0]);
+  }
   // Older expenses may have a category that's no longer in the list; then ask again.
   const [category, setCategory] = useState(
     existing && (CATEGORIES as readonly string[]).includes(existing.category) ? existing.category : ""
@@ -70,11 +95,14 @@ export function ExpenseForm({
         formData.set("receiptPath", path);
       }
 
-      // 2. Save the expense. On success, this goes back to the list.
+      // 2. Save the expense. On success, this goes back to the list,
+      //    where the message below pops up.
+      queueToast(existing ? "Resubmitted" : "Expense submitted");
       const result = existing
         ? await resubmitExpense(existing.id, formData)
         : await createExpense(formData);
       if (result?.error) {
+        clearQueuedToast();
         setError(result.error);
       }
     });
@@ -173,13 +201,41 @@ export function ExpenseForm({
         </div>
       )}
 
-      <label className={styles.field}>
+      <div className={styles.field}>
         <span>
           {existing ? "Replace receipt photo" : "Receipt photo"}{" "}
           <span className={styles.optional}>(optional, up to 5 MB)</span>
         </span>
-        <input name="receipt" type="file" accept={RECEIPT_TYPES.join(",")} />
-      </label>
+        <label
+          className={`${styles.dropzone} ${dragging ? styles.dragging : ""}`}
+          onDragOver={(event) => {
+            event.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+        >
+          {preview ? (
+            <img src={preview} alt="Selected receipt" className={styles.previewImage} />
+          ) : (
+            <span className={styles.dropIcon} aria-hidden="true">
+              ⬆
+            </span>
+          )}
+          <span className={styles.dropText}>
+            <strong>{preview ? "Photo selected" : "Drag a photo here"}</strong>
+            <span>{preview ? "Drop or choose another to replace it" : "or click to choose one"}</span>
+          </span>
+          <input
+            ref={fileRef}
+            name="receipt"
+            type="file"
+            accept={RECEIPT_TYPES.join(",")}
+            className={styles.fileInput}
+            onChange={(event) => showPreview(event.target.files?.[0])}
+          />
+        </label>
+      </div>
 
       {error && <p className={styles.error}>{error}</p>}
 
@@ -188,7 +244,16 @@ export function ExpenseForm({
           Cancel
         </Link>
         <button type="submit" className={styles.submit} disabled={pending}>
-          {pending ? "Submitting…" : existing ? "Resubmit for review" : "Submit expense"}
+          {pending ? (
+            <>
+              <Spinner />
+              Submitting…
+            </>
+          ) : existing ? (
+            "Resubmit for review"
+          ) : (
+            "Submit expense"
+          )}
         </button>
       </div>
     </form>

@@ -52,6 +52,13 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Lifts slightly on hover */
+.item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
 }
 
 .top {
@@ -258,5 +265,15 @@
 
   .buttons > button {
     flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    transition: none;
+  }
+
+  .item:hover {
+    transform: none;
   }
 }

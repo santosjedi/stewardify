@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { Spinner } from "../feedback";
 import { Logo } from "../logo";
 import { signIn, signUp } from "./actions";
-import { ExpenseMockup, Features, HowItWorks, Reveal } from "./landing";
+import { Compare, ExpenseMockup, Features, HowItWorks, Reveal, TryIt } from "./landing";
+import { MagneticButton, ScrollEffects, Spotlight, Typewriter } from "./landing-extras";
 import styles from "./auth.module.css";
 
 // The sign-in and sign-up page (also the landing page): a welcome panel next to
@@ -15,8 +17,10 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
 
   return (
     <main className={styles.page}>
+      <ScrollEffects />
       <Reveal className={styles.main}>
         <section className={styles.hero} data-tilt-area>
+          <Spotlight />
           <div className={styles.brand}>
             <Logo />
             <span className={styles.brandName}>Stewardify</span>
@@ -24,10 +28,12 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
           <h1 className={styles.headline}>
             Simple, honest expense tracking <span className={styles.accent}>for ministries.</span>
           </h1>
+          <Typewriter />
+          <MagneticButton href={isSignUp ? "#auth-form" : "/signup"}>Get started</MagneticButton>
           <ExpenseMockup />
         </section>
 
-        <form action={formAction} className={styles.card}>
+        <form id="auth-form" action={formAction} className={styles.card}>
           <div className={styles.cardHeading}>
             <h2 className={styles.title}>{isSignUp ? "Create your account" : "Welcome back"}</h2>
             <p className={styles.subtitle}>
@@ -61,7 +67,16 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
           {state?.message && <p className={styles.success}>{state.message}</p>}
 
           <button type="submit" className={styles.button} disabled={pending}>
-            {pending ? "Please wait…" : isSignUp ? "Create account" : "Sign in"}
+            {pending ? (
+                <>
+                  <Spinner />
+                  Please wait…
+                </>
+              ) : isSignUp ? (
+                "Create account"
+              ) : (
+                "Sign in"
+              )}
           </button>
 
           <p className={styles.switch}>
@@ -79,6 +94,8 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
       </Reveal>
 
       <HowItWorks />
+      <TryIt />
+      <Compare />
       <Features />
 
       <footer className={styles.footer}>Stewardify · Simple expense tracking for ministries</footer>

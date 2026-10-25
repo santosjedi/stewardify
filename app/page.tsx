@@ -7,14 +7,16 @@ import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
 import { Activity, PreviousFeedback } from "./activity";
+import { CountUp, ShowQueuedToast, StatusBadge } from "./feedback";
 import { Header } from "./header";
 import { ReceiptThumbnail } from "./receipt-thumbnail";
+import { PageSkeleton } from "./skeleton";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
     <main className={styles.main}>
-      <Suspense fallback={<p className={styles.message}>Loading…</p>}>
+      <Suspense fallback={<PageSkeleton />}>
         <Dashboard />
       </Suspense>
     </main>
@@ -28,6 +30,7 @@ async function Dashboard() {
 
   return (
     <>
+      <ShowQueuedToast />
       <Header user={user} active="expenses" />
       <div className={styles.toolbar}>
         <h2 className={styles.heading}>
@@ -74,19 +77,27 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
       <section className={styles.summary}>
         <div className={styles.card}>
           <span className={styles.cardLabel}>Total</span>
-          <span className={styles.cardValue}>{pesos.format(total)}</span>
+          <span className={styles.cardValue}>
+            <CountUp value={total} format="pesos" />
+          </span>
         </div>
         <div className={`${styles.card} ${styles.cardPending}`}>
           <span className={styles.cardLabel}>Pending</span>
-          <span className={styles.cardValue}>{count("pending")}</span>
+          <span className={styles.cardValue}>
+            <CountUp value={count("pending")} format="number" />
+          </span>
         </div>
         <div className={`${styles.card} ${styles.cardApproved}`}>
           <span className={styles.cardLabel}>Approved</span>
-          <span className={styles.cardValue}>{count("approved")}</span>
+          <span className={styles.cardValue}>
+            <CountUp value={count("approved")} format="number" />
+          </span>
         </div>
         <div className={`${styles.card} ${styles.cardRejected}`}>
           <span className={styles.cardLabel}>Rejected</span>
-          <span className={styles.cardValue}>{count("rejected")}</span>
+          <span className={styles.cardValue}>
+            <CountUp value={count("rejected")} format="number" />
+          </span>
         </div>
       </section>
 
@@ -125,7 +136,7 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
               </div>
               <div className={styles.right}>
                 <span className={styles.amount}>{pesos.format(Number(e.amount_php))}</span>
-                <span className={`${styles.badge} ${styles[e.status]}`}>{e.status}</span>
+                <StatusBadge status={e.status} className={`${styles.badge} ${styles[e.status]}`} />
               </div>
             </li>
           ))}

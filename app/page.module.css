@@ -266,20 +266,36 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
-  overflow: hidden;
+}
+
+.row:first-child {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.row:last-child {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.row:only-child {
+  border-radius: var(--radius-lg);
 }
 
 .row {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 16px 18px;
-  transition: background 0.15s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
+/* Lifts slightly on hover */
 .row:hover {
-  background: var(--background);
+  z-index: 1;
+  background: var(--surface);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
 }
 
 .row + .row {
@@ -489,6 +505,12 @@
   width: 48px;
   height: 48px;
   object-fit: cover;
+  transition: transform 0.25s;
+}
+
+/* Zooms in a little on hover */
+.thumbnailButton:hover .thumbnail {
+  transform: scale(1.12);
 }
 
 .viewer {
@@ -551,5 +573,19 @@
   .row {
     align-items: flex-start;
     padding: 14px;
+  }
+}
+
+/* ---------- Reduced motion: no lifting or zooming ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .thumbnail {
+    transition: none;
+  }
+
+  .row:hover,
+  .thumbnailButton:hover .thumbnail {
+    transform: none;
   }
 }

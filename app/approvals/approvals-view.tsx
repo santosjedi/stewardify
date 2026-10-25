@@ -7,6 +7,7 @@ import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
 import { Activity, PreviousFeedback } from "../activity";
+import { CountUp, StatusBadge } from "../feedback";
 import { Header } from "../header";
 import { ReceiptThumbnail } from "../receipt-thumbnail";
 import { ChangeDecision } from "./change-decision";
@@ -53,12 +54,14 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
       <section className={styles.summary}>
         <div className={`${pageStyles.card} ${pageStyles.cardPending}`}>
           <span className={pageStyles.cardLabel}>Total pending</span>
-          <span className={pageStyles.cardValue}>{pesos.format(sum(pending))}</span>
+          <span className={pageStyles.cardValue}>
+            <CountUp value={sum(pending)} format="pesos" />
+          </span>
         </div>
         <div className={`${pageStyles.card} ${pageStyles.cardApproved}`}>
           <span className={pageStyles.cardLabel}>Total approved</span>
           <span className={pageStyles.cardValue}>
-            {pesos.format(sum(expenses.filter((e) => e.status === "approved")))}
+            <CountUp value={sum(expenses.filter((e) => e.status === "approved"))} format="pesos" />
           </span>
         </div>
       </section>
@@ -99,7 +102,7 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
                 <div className={pageStyles.right}>
                   <span className={pageStyles.amount}>{pesos.format(Number(e.amount_php))}</span>
                   {view === "history" && (
-                    <span className={`${pageStyles.badge} ${pageStyles[e.status]}`}>{e.status}</span>
+                    <StatusBadge status={e.status} className={`${pageStyles.badge} ${pageStyles[e.status]}`} />
                   )}
                 </div>
               </div>

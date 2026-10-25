@@ -1,0 +1,567 @@
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- 1. Cursor spotlight (inside the navy hero) ---------- */
+
+/* (Doubled class so it stays positioned behind the hero's content.) */
+.spotlight.spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    360px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(252, 199, 21, 0.16),
+    rgba(36, 131, 197, 0.1) 40%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.spotlightOn {
+  opacity: 1;
+}
+
+/* ---------- 2. Typewriter (gold text on the navy hero) ---------- */
+
+.typewriter {
+  min-height: 1.5em;
+  font-size: 17px;
+  color: var(--band-text);
+}
+
+.typed {
+  color: var(--band-accent);
+  font-weight: 600;
+}
+
+.caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--band-accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- 4. Magnetic "Get started" button (gold) ---------- */
+
+.magnetic {
+  --pull-x: 0px;
+  --pull-y: 0px;
+  align-self: flex-start;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--on-gold);
+  font-weight: 700;
+  transform: translate(var(--pull-x), var(--pull-y));
+  transition: transform 0.25s ease-out, background 0.2s, box-shadow 0.2s;
+}
+
+.magnetic:hover {
+  background: var(--gold-hover);
+  box-shadow: 0 8px 22px rgba(252, 199, 21, 0.3);
+  transform: translate(var(--pull-x), var(--pull-y)) scale(1.04);
+}
+
+/* ---------- 3. Try-it demo ---------- */
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.demoCard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  max-width: 460px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.demoTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.demoText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.demoTitle {
+  font-weight: 600;
+}
+
+.demoMeta {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.demoRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.demoAmount {
+  font-weight: 700;
+}
+
+.demoBadge {
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  animation: badgeSwap 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes badgeSwap {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.demo_pending {
+  background: var(--pending-bg);
+  color: var(--pending-text);
+}
+
+.demo_approved {
+  background: var(--approved-bg);
+  color: var(--approved-text);
+}
+
+.demo_rejected {
+  background: var(--rejected-bg);
+  color: var(--rejected-text);
+}
+
+.demoButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.demoApprove,
+.demoReject,
+.demoReset {
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.demoApprove {
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.demoApprove:hover {
+  background: var(--primary-hover);
+  transform: scale(1.04);
+}
+
+.demoReject {
+  border: 1px solid var(--rejected-text);
+  background: var(--surface);
+  color: var(--rejected-text);
+}
+
+.demoReject:hover {
+  background: var(--rejected-bg);
+  transform: scale(1.04);
+}
+
+.demoReset {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+.demoReset:hover {
+  background: var(--background);
+  transform: scale(1.04);
+}
+
+.demoNote {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---------- 5. Before/after slider ---------- */
+
+.compare {
+  --pos: 50%;
+  position: relative;
+  height: 320px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  user-select: none;
+}
+
+.before,
+.after {
+  position: absolute;
+  inset: 0;
+  padding: 48px 24px 24px;
+}
+
+.after {
+  background: var(--background);
+}
+
+/* The old way is cut off at the slider position */
+.before {
+  background: #fbf7ee;
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.compareLabel {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--band);
+  color: var(--band-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.labelRight {
+  left: auto;
+  right: 16px;
+}
+
+/* Messy receipts and a group chat */
+.mess {
+  position: relative;
+  height: 100%;
+}
+
+.receipt {
+  position: absolute;
+  padding: 10px 12px;
+  border: 1px dashed #c8bfae;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  color: #57534e;
+  font-size: 12px;
+  font-family: "Courier New", monospace;
+}
+
+.r1 {
+  top: 6px;
+  left: 4px;
+  transform: rotate(-6deg);
+}
+
+.r2 {
+  top: 92px;
+  left: 30px;
+  transform: rotate(4deg);
+}
+
+.r3 {
+  top: 168px;
+  left: 8px;
+  transform: rotate(-3deg);
+  color: #78716c;
+}
+
+.chat {
+  position: absolute;
+  top: 0;
+  left: 46%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 50%;
+}
+
+.bubble {
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 7px 12px;
+  border-radius: 14px 14px 14px 4px;
+  background: #e7e5e4;
+  color: #1c1917;
+  font-size: 12px;
+}
+
+.bubbleMe {
+  align-self: flex-end;
+  border-radius: 14px 14px 4px 14px;
+  background: #d6e6f5;
+}
+
+/* The clean dashboard */
+.dash {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+  margin-left: auto;
+}
+
+.dashStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.dashStats span {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  font-family: var(--font-heading-family);
+  font-size: 20px;
+  font-weight: 600;
+  font-variation-settings: "SOFT" 100;
+}
+
+.dashStats small {
+  font-family: var(--font-body-family);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.dashRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 13px;
+}
+
+.dashThumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--surface-muted);
+}
+
+.dashTitle {
+  flex: 1;
+  font-weight: 500;
+}
+
+.dashBadge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.dashApproved {
+  background: var(--approved-bg);
+  color: var(--approved-text);
+}
+
+.dashPending {
+  background: var(--pending-bg);
+  color: var(--pending-text);
+}
+
+/* The divider and its round handle */
+.handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 3px;
+  margin-left: -1.5px;
+  background: var(--gold);
+  pointer-events: none;
+}
+
+.handleKnob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--on-gold);
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+  transform: translate(-50%, -50%);
+}
+
+/* An invisible slider over the whole picture: drag anywhere, or use arrow keys */
+.compareRange {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+
+.compare:has(.compareRange:focus-visible) .handleKnob {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ---------- 6. Parallax shapes ---------- */
+
+.shape {
+  --parallax: 0px;
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translateY(var(--parallax));
+  will-change: transform;
+}
+
+.shapeGold {
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(252, 199, 21, 0.22), transparent 70%);
+}
+
+.shapeBlue {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(36, 131, 197, 0.16), transparent 70%);
+}
+
+.shapeLeft {
+  top: -40px;
+  left: -80px;
+}
+
+.shapeRight {
+  top: 20px;
+  right: -90px;
+}
+
+/* ---------- 8. Scroll-progress bar ---------- */
+
+.progress {
+  --progress: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: 3px;
+  background: var(--gold);
+  transform: scaleX(var(--progress));
+  transform-origin: left;
+  pointer-events: none;
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 600px) {
+  .compare {
+    height: 360px;
+  }
+
+  .before,
+  .after {
+    padding: 48px 14px 14px;
+  }
+
+  .chat {
+    top: 210px;
+    left: 0;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .r2 {
+    top: 70px;
+    left: 120px;
+  }
+
+  .r3 {
+    top: 130px;
+  }
+
+  .shapeGold,
+  .shapeBlue {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+/* ---------- Reduced motion: effects off ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .caret,
+  .demoBadge {
+    animation: none;
+  }
+
+  .magnetic,
+  .demoApprove,
+  .demoReject,
+  .demoReset,
+  .spotlight {
+    transition: none;
+  }
+
+  .magnetic:hover,
+  .demoApprove:hover,
+  .demoReject:hover,
+  .demoReset:hover {
+    transform: none;
+  }
+
+  .shape {
+    transform: none;
+  }
+}

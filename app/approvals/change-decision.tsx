@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import type { Status } from "@/lib/expenses";
-import { changeDecision } from "./actions";
+import { centerOf, notify, Spinner } from "../feedback";
+import { changeDecision, type ReviewState } from "./actions";
 import styles from "./approvals.module.css";
 
 const LABELS: Record<Status, string> = {
@@ -20,7 +21,22 @@ const OPTIONS: { value: Status; label: string }[] = [
 // "Change decision" on a reviewed expense: pick a new decision, add a comment,
 // then confirm before it's saved.
 export function ChangeDecision({ expenseId, current }: { expenseId: string; current: Status }) {
-  const [state, formAction, pending] = useActionState(changeDecision, null);
+  const confirmRef = useRef<HTMLButtonElement>(null);
+
+  // Saves the change; on success, shows a message (and confetti for approvals).
+  async function change(previous: ReviewState, formData: FormData) {
+    const decision = formData.get("decision");
+    const origin = centerOf(confirmRef.current);
+    const result = await changeDecision(previous, formData);
+    if (!result) {
+      if (decision === "approved") notify("Approved", origin);
+      else if (decision === "rejected") notify("Rejected");
+      else notify("Moved back to pending");
+    }
+    return result;
+  }
+
+  const [state, formAction, pending] = useActionState(change, null);
   const [open, setOpen] = useState(false);
   const [choice, setChoice] = useState<Status | null>(null);
   const [comment, setComment] = useState("");
@@ -120,8 +136,15 @@ export function ChangeDecision({ expenseId, current }: { expenseId: string; curr
             >
               Go back
             </button>
-            <button type="submit" className={styles.approve} disabled={pending}>
-              {pending ? "Saving…" : "Yes, change it"}
+            <button ref={confirmRef} type="submit" className={styles.approve} disabled={pending}>
+              {pending ? (
+                <>
+                  <Spinner />
+                  Saving…
+                </>
+              ) : (
+                "Yes, change it"
+              )}
             </button>
           </div>
         </>

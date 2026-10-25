@@ -24,9 +24,16 @@
   gap: 28px;
   padding: 40px 36px;
   border-radius: var(--radius-lg);
+  position: relative;
   background: var(--band);
   color: var(--band-text);
   overflow: hidden;
+}
+
+/* Keep the hero's content above the cursor spotlight */
+.hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .brand {
@@ -308,7 +315,15 @@
 /* ---------- Sections below the top ---------- */
 
 .section {
+  position: relative;
+  isolation: isolate;
   margin-top: 64px;
+}
+
+.sectionLead {
+  margin: -12px 0 24px;
+  color: var(--muted);
+  text-align: center;
 }
 
 .sectionTitle {
@@ -413,22 +428,38 @@
   gap: 16px;
 }
 
+/* The border is drawn as a background, so it can become a moving gradient on hover */
 .feature {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 22px 20px;
-  border: 1px solid var(--border);
+  border: 2px solid transparent;
   border-radius: var(--radius-lg);
-  background: var(--surface);
-  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(var(--border), var(--border)) border-box;
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
-/* Lift with a soft blue glow */
+/* Lift with a soft blue glow, and a gradient border that flows around */
 .feature:hover {
   transform: translateY(-6px);
-  border-color: var(--blue);
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(110deg, var(--blue), var(--gold), var(--orange), var(--blue)) border-box;
+  background-size: 100% 100%, 300% 100%;
   box-shadow: 0 12px 32px rgba(36, 131, 197, 0.18);
+  animation: borderFlow 3s linear infinite;
+}
+
+@keyframes borderFlow {
+  from {
+    background-position: 0 0, 0% 0;
+  }
+  to {
+    background-position: 0 0, 300% 0;
+  }
 }
 
 .featureIcon {
@@ -567,6 +598,7 @@
 @media (prefers-reduced-motion: reduce) {
   .mockFloat,
   .mockBadge,
+  .feature:hover,
   .feature:hover .featureIcon {
     animation: none;
   }
