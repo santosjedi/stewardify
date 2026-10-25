@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
-import { EXPENSE_COLUMNS, type Expense } from "@/lib/expenses";
+import { categoryLabel, EXPENSE_COLUMNS, type Expense } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
@@ -90,7 +90,7 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
                 <div className={pageStyles.details}>
                   <span className={pageStyles.description}>{e.description}</span>
                   <span className={pageStyles.meta}>
-                    {e.submitter?.full_name ?? "Unknown"} · {formatDate(e.expense_date)} · {e.category}
+                    {e.submitter?.full_name ?? "Unknown"} · {formatDate(e.expense_date)} · {categoryLabel(e)}
                   </span>
                   {e.note && <span className={styles.note}>Note: {e.note}</span>}
                   <PreviousFeedback expense={e} />

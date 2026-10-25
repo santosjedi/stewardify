@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { CATEGORIES } from "@/lib/expenses";
+import { CATEGORIES, MAX_CATEGORY_OTHER } from "@/lib/expenses";
 
 export type SubmitResult = { error: string } | undefined;
 
@@ -10,6 +10,7 @@ type ExpenseFields = {
   expense_date: string;
   description: string;
   category: string;
+  category_other: string | null;
   amount_php: string;
   note: string | null;
   receiptPath: string;
@@ -21,6 +22,7 @@ function readFields(formData: FormData, userId: string): { error: string } | Exp
   const expenseDate = String(formData.get("expenseDate") ?? "");
   const description = String(formData.get("description") ?? "").trim();
   const category = String(formData.get("category") ?? "");
+  const categoryOther = String(formData.get("categoryOther") ?? "").trim();
   const amount = String(formData.get("amount") ?? "").trim();
   const note = String(formData.get("note") ?? "").trim();
   const receiptPath = String(formData.get("receiptPath") ?? "");
@@ -36,6 +38,12 @@ function readFields(formData: FormData, userId: string): { error: string } | Exp
   }
   if (!(CATEGORIES as readonly string[]).includes(category)) {
     return { error: "Please choose a category." };
+  }
+  if (category === "Other" && !categoryOther) {
+    return { error: "Please specify what the \"Other\" category is." };
+  }
+  if (category === "Other" && categoryOther.length > MAX_CATEGORY_OTHER) {
+    return { error: `Please keep the category under ${MAX_CATEGORY_OTHER} characters.` };
   }
   // A number with up to 2 decimal places, more than 0.
   if (!/^\d+(\.\d{1,2})?$/.test(amount) || Number(amount) <= 0) {
@@ -55,6 +63,7 @@ function readFields(formData: FormData, userId: string): { error: string } | Exp
     expense_date: expenseDate,
     description,
     category,
+    category_other: category === "Other" ? categoryOther : null,
     amount_php: amount,
     note: note || null,
     receiptPath,

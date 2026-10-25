@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
-import { EXPENSE_COLUMNS, type Expense, type Status } from "@/lib/expenses";
+import { categoryLabel, EXPENSE_COLUMNS, type Expense, type Status } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
@@ -103,7 +103,7 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
                 <span className={styles.description}>{e.description}</span>
                 <span className={styles.meta}>
                   {showSubmitter && e.submitter && `${e.submitter.full_name} · `}
-                  {formatDate(e.expense_date)} · {e.category}
+                  {formatDate(e.expense_date)} · {categoryLabel(e)}
                 </span>
                 {e.status !== "pending" && (
                   <span className={styles.review}>

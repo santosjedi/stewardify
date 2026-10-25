@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useTransition, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { CATEGORIES, MAX_RECEIPT_BYTES, RECEIPT_TYPES } from "@/lib/expenses";
+import { CATEGORIES, MAX_CATEGORY_OTHER, MAX_RECEIPT_BYTES, RECEIPT_TYPES } from "@/lib/expenses";
 import { createExpense, resubmitExpense } from "./actions";
 import styles from "./expense-form.module.css";
 
@@ -13,6 +13,7 @@ export type ExistingExpense = {
   expense_date: string;
   description: string;
   category: string;
+  category_other: string | null;
   amount_php: number;
   note: string | null;
   receiptUrl: string | null;
@@ -30,6 +31,10 @@ export function ExpenseForm({
 }) {
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  // Older expenses may have a category that's no longer in the list; then ask again.
+  const [category, setCategory] = useState(
+    existing && (CATEGORIES as readonly string[]).includes(existing.category) ? existing.category : ""
+  );
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -102,7 +107,12 @@ export function ExpenseForm({
       <div className={styles.row}>
         <label className={styles.field}>
           Category
-          <select name="category" defaultValue={existing?.category ?? ""} required>
+          <select
+            name="category"
+            value={category}
+            onChange={(event) => setCategory(event.target.value)}
+            required
+          >
             <option value="" disabled>
               Choose…
             </option>
@@ -128,6 +138,20 @@ export function ExpenseForm({
           />
         </label>
       </div>
+
+      {category === "Other" && (
+        <label className={styles.field}>
+          Please specify
+          <input
+            name="categoryOther"
+            type="text"
+            maxLength={MAX_CATEGORY_OTHER}
+            defaultValue={existing?.category_other ?? undefined}
+            placeholder="e.g. Generator fuel"
+            required
+          />
+        </label>
+      )}
 
       <label className={styles.field}>
         <span>
