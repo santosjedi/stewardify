@@ -1,14 +1,18 @@
+/* The landing page: hero + form at the top, then "How it works" and features. */
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 32px 16px 24px;
+}
+
 /* Welcome panel on the left, form on the right. Stacked on phones. */
 .main {
-  flex: 1;
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 24px;
   align-items: stretch;
-  width: 100%;
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 32px 16px;
 }
 
 /* ---------- Welcome panel (the navy band) ---------- */
@@ -22,6 +26,7 @@
   border-radius: var(--radius-lg);
   background: var(--band);
   color: var(--band-text);
+  overflow: hidden;
 }
 
 .brand {
@@ -46,32 +51,138 @@
   color: var(--band-accent);
 }
 
-.points {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  list-style: none;
-  font-size: 15px;
+/* ---------- The sample expense card in the hero ---------- */
+
+/* Gentle up-and-down float */
+.mockFloat {
+  perspective: 900px;
+  animation: float 6s ease-in-out infinite;
 }
 
-.points li {
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Tilts toward the mouse (the angles are set by landing.tsx) */
+.mock {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition: transform 0.25s ease-out;
+}
+
+.mockTop {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* A gold check before each point */
-.points li::before {
-  content: "✓";
+.mockThumb {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--surface-muted) 0 5px,
+    var(--surface) 5px 9px
+  );
+}
+
+.mockText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mockTitle {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mockMeta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.mockRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.mockAmount {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.mockBadge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background 0.4s, color 0.4s;
+  animation: badgePop 0.4s ease-out;
+}
+
+.mockPending {
+  background: var(--pending-bg);
+  color: var(--pending-text);
+}
+
+.mockApproved {
+  background: var(--approved-bg);
+  color: var(--approved-text);
+}
+
+@keyframes badgePop {
+  0% {
+    transform: scale(0.85);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.mockFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.mockAvatar {
   display: grid;
   place-items: center;
-  flex-shrink: 0;
   width: 22px;
   height: 22px;
   border-radius: 50%;
   background: var(--gold);
-  color: var(--band);
-  font-size: 12px;
+  color: var(--on-gold);
+  font-size: 9px;
   font-weight: 700;
 }
 
@@ -130,6 +241,7 @@
   box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
 }
 
+/* Shifts color and grows a little on hover */
 .button {
   margin-top: 4px;
   padding: 12px;
@@ -139,11 +251,17 @@
   color: var(--on-primary);
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
-.button:hover {
+.button:hover:not(:disabled) {
   background: var(--primary-hover);
+  transform: scale(1.02);
+  box-shadow: 0 6px 18px rgba(30, 78, 121, 0.25);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.99);
 }
 
 .button:disabled {
@@ -180,20 +298,205 @@
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
+  transition: color 0.15s;
 }
 
-/* ---------- Phones ---------- */
+.switch a:hover {
+  color: var(--primary);
+}
+
+/* ---------- Sections below the top ---------- */
+
+.section {
+  margin-top: 64px;
+}
+
+.sectionTitle {
+  margin-bottom: 24px;
+  font-size: 30px;
+  text-align: center;
+}
+
+/* Fade and slide in when scrolled into view (landing.tsx adds .revealed) */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- How it works ---------- */
+
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  list-style: none;
+}
+
+/* The line connecting the steps; it draws itself in when the section appears */
+.steps::before {
+  content: "";
+  position: absolute;
+  top: 44px;
+  left: 16%;
+  right: 16%;
+  height: 2px;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.2s ease-out 0.3s;
+}
+
+.revealed .steps::before {
+  transform: scaleX(1);
+}
+
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  text-align: center;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+
+.step:hover {
+  transform: translateY(-6px);
+  border-color: var(--blue);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.stepNumber {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--band);
+  color: var(--band-text);
+  font-family: var(--font-heading-family);
+  font-size: 18px;
+  font-weight: 600;
+  transition: background 0.25s, color 0.25s;
+}
+
+.step:hover .stepNumber {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.stepTitle {
+  font-size: 20px;
+}
+
+.stepText {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ---------- Feature cards ---------- */
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+}
+
+/* Lift with a soft blue glow */
+.feature:hover {
+  transform: translateY(-6px);
+  border-color: var(--blue);
+  box-shadow: 0 12px 32px rgba(36, 131, 197, 0.18);
+}
+
+.featureIcon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--surface-muted);
+  color: var(--blue);
+}
+
+.feature:hover .featureIcon {
+  animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(-6px);
+  }
+  65% {
+    transform: translateY(-2px);
+  }
+}
+
+.featureTitle {
+  font-size: 18px;
+}
+
+.featureText {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.footer {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ---------- Tablets and phones ---------- */
+
+@media (max-width: 860px) {
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
 @media (max-width: 760px) {
+  .page {
+    padding: 16px 16px 24px;
+  }
+
   .main {
     grid-template-columns: 1fr;
     gap: 16px;
-    padding: 16px;
   }
 
   .hero {
-    gap: 18px;
-    padding: 28px 24px;
+    gap: 20px;
+    padding: 28px 22px;
   }
 
   .headline {
@@ -202,5 +505,94 @@
 
   .card {
     padding: 28px 22px;
+  }
+
+  .section {
+    margin-top: 48px;
+  }
+
+  .sectionTitle {
+    font-size: 26px;
+  }
+
+  /* Steps stack, and the line runs down the left side instead */
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .steps::before {
+    top: 24px;
+    bottom: 24px;
+    left: 40px;
+    right: auto;
+    width: 2px;
+    height: auto;
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+
+  .revealed .steps::before {
+    transform: scaleY(1);
+  }
+
+  .step {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 14px;
+    text-align: left;
+  }
+
+  .stepText {
+    flex-basis: 100%;
+    padding-left: 54px;
+  }
+
+  /* Smaller lift on touch screens */
+  .step:hover,
+  .feature:hover {
+    transform: translateY(-3px);
+  }
+}
+
+@media (max-width: 480px) {
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Reduced motion: no floating, tilting, sliding, or bouncing ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .mockFloat,
+  .mockBadge,
+  .feature:hover .featureIcon {
+    animation: none;
+  }
+
+  .mock,
+  .reveal,
+  .steps::before,
+  .step,
+  .feature,
+  .button {
+    transition: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .steps::before,
+  .revealed .steps::before {
+    transform: none;
+  }
+
+  .step:hover,
+  .feature:hover,
+  .button:hover:not(:disabled) {
+    transform: none;
   }
 }
