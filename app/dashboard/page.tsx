@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
+import { budgetLines, recommendations, type Budget, type BudgetLine, type Recommendation } from "@/lib/budgets";
 import { pesos } from "@/lib/format";
 import {
   monthLabel,
@@ -41,9 +43,10 @@ async function Dashboard() {
 
   // Approvers can read every expense (the database's security rules decide this).
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("expenses")
-    .select("amount_php, category, expense_date, status");
+  const [{ data, error }, { data: budgetRows, error: budgetError }] = await Promise.all([
+    supabase.from("expenses").select("amount_php, category, expense_date, status"),
+    supabase.from("category_budgets").select("category, monthly_amount"),
+  ]);
 
   if (error) {
     return <p className={pageStyles.message}>Could not load expenses: {error.message}</p>;
@@ -56,6 +59,9 @@ async function Dashboard() {
   const byCategory = spendingByCategory(rows, months);
   const projection = monthProjection(rows, today);
   const range = `${monthLabel(months[0], true)} – ${monthLabel(months[months.length - 1], true)}`;
+  const budgets = (budgetRows ?? []) as Budget[];
+  const lines = budgetLines(rows, budgets, today);
+  const advice = recommendations(rows, budgets, today, (n) => pesos.format(n));
 
   return (
     <>
@@ -69,6 +75,47 @@ async function Dashboard() {
       </p>
 
       <Projection projection={projection} />
+
+      <div className={styles.grid}>
+        <section className={styles.panel}>
+          <div className={styles.panelHead}>
+            <h3>Budget this month</h3>
+            <Link href="/budgets" className={styles.panelLink}>
+              Manage budgets →
+            </Link>
+          </div>
+          {budgetError ? (
+            <p className={styles.math}>Budgets aren&apos;t available yet: {budgetError.message}</p>
+          ) : lines.length === 0 ? (
+            <EmptyState
+              title="No budgets set"
+              text="Set monthly budgets per category to see spending against them here."
+              action={
+                <Link href="/budgets" className={pageStyles.newButton}>
+                  Set budgets
+                </Link>
+              }
+            />
+          ) : (
+            <BudgetBars lines={lines} />
+          )}
+        </section>
+
+        <section className={styles.panel}>
+          <div className={styles.panelHead}>
+            <h3>Recommendations</h3>
+            <span>Based only on your approved expenses and budgets</span>
+          </div>
+          {advice.length === 0 ? (
+            <p className={styles.math}>
+              Nothing to flag right now. Recommendations appear when a category nears or passes its budget,
+              is on pace to pass it, has stayed under budget for 2 months, or has spending without a budget.
+            </p>
+          ) : (
+            <Recommendations items={advice} />
+          )}
+        </section>
+      </div>
 
       <div className={styles.grid}>
         <section className={styles.panel}>
@@ -180,6 +227,81 @@ function CategoryChart({ data }: { data: { category: string; total: number }[] }
             {pesos.format(d.total)}
             <small>{Math.round((d.total / sum) * 100)}%</small>
           </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+const BAR_TONE: Record<BudgetLine["tone"], string> = {
+  green: styles.barGreen,
+  amber: styles.barAmber,
+  red: styles.barRed,
+};
+
+// Each budget as a progress bar: green under 75%, amber 75–100%, red over 100%.
+function BudgetBars({ lines }: { lines: BudgetLine[] }) {
+  return (
+    <ul className={styles.budgets}>
+      {lines.map((line) => {
+        const percent = Number.isFinite(line.percent) ? Math.round(line.percent) : null;
+        return (
+          <li key={line.category} className={`${styles.budgetRow} ${BAR_TONE[line.tone]}`}>
+            <div className={styles.budgetTop}>
+              <span className={styles.categoryName}>
+                <span className={styles.categoryIcon}>
+                  <Icon name={categoryIcon(line.category)} size={16} />
+                </span>
+                {line.category}
+              </span>
+              <span className={styles.budgetPercent}>{percent === null ? "No budget amount" : `${percent}%`}</span>
+            </div>
+            <div
+              className={styles.budgetTrack}
+              role="progressbar"
+              aria-label={`${line.category} budget used`}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.min(percent ?? 100, 100)}
+            >
+              <div className={styles.budgetFill} style={{ width: `${Math.min(percent ?? 100, 100)}%` }} />
+            </div>
+            <span className={styles.budgetNumbers}>
+              {pesos.format(line.spent)} of {pesos.format(line.budget)}
+              {line.spent > line.budget
+                ? ` · ${pesos.format(line.spent - line.budget)} over`
+                : ` · ${pesos.format(line.budget - line.spent)} left`}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+const ADVICE_TONE: Record<Recommendation["tone"], string> = {
+  red: styles.adviceRed,
+  amber: styles.adviceAmber,
+  blue: styles.adviceBlue,
+};
+
+function Recommendations({ items }: { items: Recommendation[] }) {
+  return (
+    <ul className={styles.advice}>
+      {items.map((item) => (
+        <li key={item.title} className={`${styles.adviceItem} ${ADVICE_TONE[item.tone]}`}>
+          <span className={styles.adviceIcon}>
+            <Icon name="lightbulb" size={18} />
+          </span>
+          <div className={styles.adviceBody}>
+            <strong>{item.title}.</strong>
+            <span>{item.advice}</span>
+            <ul className={styles.adviceNumbers}>
+              {item.numbers.map((n) => (
+                <li key={n}>{n}</li>
+              ))}
+            </ul>
+          </div>
         </li>
       ))}
     </ul>

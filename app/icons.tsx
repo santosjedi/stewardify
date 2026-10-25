@@ -11,6 +11,8 @@ const PATHS: Record<string, ReactNode> = {
   calendar: <path d="M4 6h16v14H4V6zM4 10h16M8 3v5M16 3v5" />,
   bell: <path d="M6 16V11a6 6 0 1 1 12 0v5l2 2H4l2-2zM10 20a2 2 0 0 0 4 0" />,
   trend: <path d="M3 17l6-6 4 4 8-8M15 7h6v6" />,
+  target: <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM12 12h.01" />,
+  lightbulb: <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.8 1 1.5 1 2.5h6c0-1 .2-1.7 1-2.5A6 6 0 0 0 12 3z" />,
 
   // Stat cards
   wallet: <path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7zm0 0 2-3h12M16 13.5h.01" />,

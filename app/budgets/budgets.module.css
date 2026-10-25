@@ -1,0 +1,143 @@
+.intro {
+  margin: -8px 0 20px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.head,
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 1fr 180px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+}
+
+.head {
+  background: var(--background);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.row {
+  border-top: 1px solid var(--border);
+}
+
+.category {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e8f1fa;
+  color: var(--primary);
+}
+
+.spent {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.mobileLabel {
+  display: none;
+}
+
+.input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--foreground);
+  text-align: right;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+}
+
+.error {
+  margin: 12px 18px 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--rejected-bg);
+  color: var(--rejected-text);
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-top: 1px solid var(--border);
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.save {
+  padding: 11px 22px;
+  border: none;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.save:hover {
+  background: var(--primary-hover);
+}
+
+.save:disabled {
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
+  cursor: default;
+}
+
+@media (max-width: 640px) {
+  .head {
+    display: none;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .mobileLabel {
+    display: inline;
+  }
+
+  .input {
+    text-align: left;
+  }
+}

@@ -9,7 +9,7 @@ import { Logo } from "./logo";
 import { Bell } from "./reminders/bell";
 import styles from "./page.module.css";
 
-export type Page = "expenses" | "submit" | "calendar" | "dashboard" | "approvals" | "history";
+export type Page = "expenses" | "submit" | "calendar" | "dashboard" | "budgets" | "approvals" | "history";
 
 // "Good morning" / "Good afternoon" / "Good evening", by Philippine time.
 function greeting(now: Date) {
@@ -50,6 +50,7 @@ export async function Header({ user, active }: { user: CurrentUser; active: Page
   if (user.role === "approver") {
     links.push(
       { page: "dashboard", href: "/dashboard", label: "Dashboard", icon: "chart" },
+      { page: "budgets", href: "/budgets", label: "Budgets", icon: "target" },
       { page: "approvals", href: "/approvals", label: "Approval Queue", icon: "inbox" },
       { page: "history", href: "/approvals/history", label: "History", icon: "history" }
     );
