@@ -1,0 +1,93 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+  font-weight: 400;
+}
+
+.field input[type="file"] {
+  padding: 8px;
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.error {
+  color: var(--rejected-text);
+  background: var(--rejected-bg);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.cancel {
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.submit {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 8px;
+  background: var(--foreground);
+  color: var(--background);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@media (max-width: 560px) {
+  .form {
+    padding: 20px 16px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+  }
+}

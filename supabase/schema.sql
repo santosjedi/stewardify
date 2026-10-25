@@ -32,8 +32,7 @@ create table if not exists public.expenses (
   receipt_path   text,  -- where the photo is saved in the "receipts" bucket
   status         text not null default 'pending'
                  check (status in ('pending', 'approved', 'rejected')),
-  -- Optional for now so you can type test rows in by hand.
-  -- See the TODO in step4_accounts.sql.
+  -- Required from step 5 on (see step5_submit.sql).
   submitted_by   uuid references public.profiles (id) on delete set null,
   reviewed_by    uuid references public.profiles (id) on delete set null,
   review_comment text,
@@ -63,12 +62,11 @@ alter table public.expenses enable row level security;
 -- ============================================================
 -- Private means photos are not on the open internet; the app will
 -- have to ask permission to show each one.
--- Limits: images only, up to 5 MB each.
+-- Limits: JPG, PNG, or WebP photos only, up to 5 MB each.
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('receipts', 'receipts', false, 5242880,
-        array['image/jpeg', 'image/png', 'image/webp', 'image/heic'])
+        array['image/jpeg', 'image/png', 'image/webp'])
 on conflict (id) do nothing;
 
--- No storage rules yet, so nobody can upload through the app.
--- See the TODO in step4_accounts.sql.
+-- The rules for who can upload and view receipts are in step5_submit.sql.

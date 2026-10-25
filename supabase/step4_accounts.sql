@@ -80,9 +80,7 @@ grant select on public.expenses to authenticated;
 -- New expenses belong to whoever is signed in, automatically.
 alter table public.expenses alter column submitted_by set default auth.uid();
 
--- TODO (step 5, submit form): add a rule that lets people add their own expenses,
--- then make submitted_by "not null". The sample rows you typed by hand
--- have no owner yet, so give each one an owner (or delete them) first.
+-- Step 5 (step5_submit.sql) adds the rule for adding expenses and makes submitted_by required.
 
 
 -- ============================================================
@@ -101,5 +99,4 @@ create policy "Read own profile, or all if approver"
 grant select on public.profiles to authenticated;
 
 
--- TODO (step 5, submit form): add storage rules for the "receipts" bucket so
--- people can upload and view their own receipt photos.
+-- Step 5 (step5_submit.sql) adds the storage rules for receipt photos.
