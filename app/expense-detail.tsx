@@ -14,6 +14,7 @@ const STATUS_CLASS = {
   pending: styles.pending,
   approved: styles.approved,
   rejected: styles.rejected,
+  reimbursed: styles.reimbursed,
 };
 
 // What the slide-over panel shows for one expense.
@@ -57,9 +58,34 @@ export function ExpenseDetail({ expense: e, receiptUrl }: { expense: Expense; re
             <dd>{formatDate(e.revise_by)}</dd>
           </div>
         )}
+        {e.status === "reimbursed" && (
+          <>
+            <div>
+              <dt>Reimbursed via</dt>
+              <dd>{e.reimbursed_via}</dd>
+            </div>
+            <div>
+              <dt>Paid on</dt>
+              <dd>{e.reimbursed_on && formatDate(e.reimbursed_on)}</dd>
+            </div>
+            {e.reimbursement_ref && (
+              <div>
+                <dt>Reference</dt>
+                <dd>{e.reimbursement_ref}</dd>
+              </div>
+            )}
+            <div>
+              <dt>Marked by</dt>
+              <dd>
+                {e.reimburser?.full_name ?? "An approver"}
+                {e.reimbursed_at && <small> · {formatDateTime(e.reimbursed_at)}</small>}
+              </dd>
+            </div>
+          </>
+        )}
         {e.status !== "pending" && (
           <div>
-            <dt>{e.status === "approved" ? "Approved by" : "Rejected by"}</dt>
+            <dt>{e.status === "rejected" ? "Rejected by" : "Approved by"}</dt>
             <dd>
               {e.reviewer?.full_name ?? "An approver"}
               {e.reviewed_at && <small> · {formatDateTime(e.reviewed_at)}</small>}
@@ -72,6 +98,12 @@ export function ExpenseDetail({ expense: e, receiptUrl }: { expense: Expense; re
         <div className={styles.detailBlock}>
           <h3>Note</h3>
           <p>{e.note}</p>
+        </div>
+      )}
+      {e.reimbursement_note && (
+        <div className={styles.detailBlock}>
+          <h3>Reimbursement note</h3>
+          <p>{e.reimbursement_note}</p>
         </div>
       )}
       {e.review_comment && (

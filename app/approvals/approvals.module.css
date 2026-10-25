@@ -206,6 +206,112 @@
   cursor: default;
 }
 
+/* "Mark as reimbursed" */
+.reimburseButton {
+  padding: 8px 16px;
+  border: 1px solid #1e40af;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.reimburseButton:hover {
+  filter: brightness(0.97);
+}
+
+.reimburseForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-self: stretch;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+}
+
+.reimburseNote {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.reimburseGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.formField input,
+.formField select {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.formField input:focus,
+.formField select:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+}
+
+.optionalText {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* "To reimburse": total owed per submitter */
+.owed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  list-style: none;
+}
+
+.owedItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-left: 4px solid #1e40af;
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: 14px;
+}
+
+.owedItem strong {
+  display: block;
+}
+
+.owedItem small {
+  color: var(--muted);
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 /* "Change decision" on reviewed expenses */
 .reviewLine {
   display: flex;
@@ -296,6 +402,10 @@
 @media (max-width: 560px) {
   .item {
     padding: 16px;
+  }
+
+  .reimburseGrid {
+    grid-template-columns: 1fr;
   }
 
   .buttons > button {

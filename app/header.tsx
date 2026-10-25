@@ -29,7 +29,7 @@ export async function Header({ user, active }: { user: CurrentUser; active: Page
     ...r,
     when:
       r.kind === "decided"
-        ? `${r.status === "approved" ? "Approved" : "Rejected"} · ${formatDateTime(r.date)}`
+        ? `${r.status === "reimbursed" ? "Reimbursed" : r.status === "approved" ? "Approved" : "Rejected"} · ${formatDateTime(r.date)}`
         : `${r.overdue ? "Overdue · " : ""}${r.kind === "review" ? "Needed by" : "Revise by"} ${formatDate(r.date)}`,
   }));
 

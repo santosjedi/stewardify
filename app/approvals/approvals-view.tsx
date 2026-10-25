@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
-import { categoryLabel, EXPENSE_COLUMNS, type Expense } from "@/lib/expenses";
+import { todayISO } from "@/lib/dates";
+import { categoryLabel, EXPENSE_COLUMNS, isSpent, type Expense } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { weeklySeries } from "@/lib/series";
@@ -18,13 +19,15 @@ import { categoryIcon, Icon } from "../icons";
 import { ReceiptThumbnail } from "../receipt-thumbnail";
 import { StatCard } from "../stat-card";
 import { ChangeDecision } from "./change-decision";
+import { MarkReimbursed, UndoReimbursement } from "./reimburse-form";
 import { ReviewForm } from "./review-form";
 import pageStyles from "../page.module.css";
 import styles from "./approvals.module.css";
 
 // The approver's page. "queue" shows pending expenses with Approve/Reject;
-// "history" shows the ones already approved or rejected.
-export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
+// "reimburse" shows approved expenses not yet paid back;
+// "history" shows the ones already approved, rejected, or reimbursed.
+export async function ApprovalsView({ view }: { view: "queue" | "reimburse" | "history" }) {
   await connection();
   const user = await getCurrentUser();
   if (user.role !== "approver") {
@@ -47,11 +50,27 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
     .filter((e) => e.status !== "pending")
     .sort((a, b) => (b.reviewed_at ?? "").localeCompare(a.reviewed_at ?? ""));
   const sum = (list: Expense[]) => list.reduce((total, e) => total + Number(e.amount_php), 0);
+  const toReimburse = expenses
+    .filter((e) => e.status === "approved")
+    .sort((a, b) => (a.reviewed_at ?? "").localeCompare(b.reviewed_at ?? ""));
+  const today = todayISO();
 
-  const shown = view === "queue" ? pending : reviewed;
+  const shown = view === "queue" ? pending : view === "reimburse" ? toReimburse : reviewed;
   const receiptUrls = await getReceiptUrls(supabase, shown.map((e) => e.receipt_path));
-  const approved = expenses.filter((e) => e.status === "approved");
-  const amount = (status: string) => (e: Expense) => (e.status === status ? Number(e.amount_php) : 0);
+  // "Approved" spending includes expenses that have since been reimbursed.
+  const approved = expenses.filter((e) => isSpent(e.status));
+  const amount = (status: string) => (e: Expense) =>
+    (status === "approved" ? isSpent(e.status) : e.status === status) ? Number(e.amount_php) : 0;
+
+  // Total owed per submitter, biggest first.
+  const owed = new Map<string, { name: string; total: number; count: number }>();
+  for (const e of toReimburse) {
+    const entry = owed.get(e.submitted_by) ?? { name: e.submitter?.full_name ?? "Unknown", total: 0, count: 0 };
+    entry.total += Number(e.amount_php);
+    entry.count += 1;
+    owed.set(e.submitted_by, entry);
+  }
+  const owedList = [...owed.values()].sort((a, b) => b.total - a.total);
 
   const items: ListItem[] = shown.map((e) => {
     const receiptUrl = e.receipt_path ? receiptUrls.get(e.receipt_path) : undefined;
@@ -85,7 +104,7 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
             {receiptUrl && <ReceiptThumbnail url={receiptUrl} description={e.description} />}
             <div className={pageStyles.right}>
               <span className={pageStyles.amount}>{pesos.format(Number(e.amount_php))}</span>
-              {view === "history" && (
+              {view !== "queue" && (
                 <StatusBadge status={e.status} className={`${pageStyles.badge} ${pageStyles[e.status]}`} />
               )}
             </div>
@@ -100,18 +119,38 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
               <ReviewForm expenseId={e.id} />
             ))}
 
-          {view === "history" && (
+          {view !== "queue" && (
             <div className={styles.reviewLine}>
               <p>
-                {e.status === "approved" ? "Approved" : "Rejected"} by{" "}
+                {e.status === "rejected" ? "Rejected" : "Approved"} by{" "}
                 {e.reviewer?.full_name ?? "an approver"}
                 {e.reviewed_at && ` · ${formatDateTime(e.reviewed_at)}`}
                 {e.review_comment && (
                   <span className={pageStyles.comment}> — “{e.review_comment}”</span>
                 )}
               </p>
-              {e.submitted_by !== user.id && (
-                <ChangeDecision key={`${e.id}-${e.status}`} expenseId={e.id} current={e.status} />
+              {e.status === "reimbursed" && (
+                <p>
+                  Reimbursed via {e.reimbursed_via}
+                  {e.reimbursed_on && ` · paid ${formatDate(e.reimbursed_on)}`}
+                  {e.reimbursement_ref && ` · Ref ${e.reimbursement_ref}`}
+                  {e.reimburser && ` · marked by ${e.reimburser.full_name}`}
+                </p>
+              )}
+              {e.submitted_by === user.id ? (
+                view === "reimburse" && (
+                  <p className={styles.ownNotice}>
+                    This is your own expense, so another approver needs to mark it as reimbursed.
+                  </p>
+                )
+              ) : (
+                <div className={styles.actionRow} key={`${e.id}-${e.status}`}>
+                  {e.status === "approved" && <MarkReimbursed expenseId={e.id} today={today} />}
+                  {e.status === "reimbursed" && <UndoReimbursement expenseId={e.id} />}
+                  {view === "history" && e.status !== "reimbursed" && (
+                    <ChangeDecision expenseId={e.id} current={e.status} />
+                  )}
+                </div>
               )}
             </div>
           )}
@@ -122,9 +161,11 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
 
   return (
     <>
-      <Header user={user} active={view === "queue" ? "approvals" : "history"} />
+      <Header user={user} active={view === "history" ? "history" : "approvals"} />
       <div className={pageStyles.toolbar}>
-        <h2 className={pageStyles.heading}>{view === "queue" ? "Approval queue" : "History"}</h2>
+        <h2 className={pageStyles.heading}>
+          {view === "queue" ? "Approval queue" : view === "reimburse" ? "To reimburse" : "History"}
+        </h2>
       </div>
 
       <section className={styles.summary}>
@@ -151,6 +192,12 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
           Queue ({pending.length})
         </Link>
         <Link
+          href="/approvals/reimburse"
+          className={view === "reimburse" ? styles.tabActive : styles.tab}
+        >
+          To reimburse ({toReimburse.length})
+        </Link>
+        <Link
           href="/approvals/history"
           className={view === "history" ? styles.tabActive : styles.tab}
         >
@@ -158,13 +205,31 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
         </Link>
       </nav>
 
+      {view === "reimburse" && owedList.length > 0 && (
+        <ul className={styles.owed} aria-label="Total owed per submitter">
+          {owedList.map((o) => (
+            <li key={o.name} className={styles.owedItem}>
+              <span className={pageStyles.initials}>{initials(o.name)}</span>
+              <span>
+                <strong>{pesos.format(o.total)}</strong>
+                <small>
+                  owed to {o.name} · {o.count} {o.count === 1 ? "expense" : "expenses"}
+                </small>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <ExpenseList
         items={items}
-        chips={view === "history" ? ["approved", "rejected"] : []}
+        chips={view === "history" ? ["approved", "rejected", "reimbursed"] : []}
         listClassName={styles.list}
         empty={
           view === "queue" ? (
             <EmptyState title="All caught up! 🎉" text="Nothing is waiting for review right now." />
+          ) : view === "reimburse" ? (
+            <EmptyState title="Nothing to reimburse" text="Approved expenses that still need to be paid back will appear here." />
           ) : (
             <EmptyState
               title="No decisions yet"

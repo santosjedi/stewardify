@@ -20,6 +20,7 @@ const CHIP_LABELS: Record<"all" | Status, string> = {
   pending: "Pending",
   approved: "Approved",
   rejected: "Rejected",
+  reimbursed: "Reimbursed",
 };
 
 // Clicks on these inside a row do their own thing instead of opening the panel.

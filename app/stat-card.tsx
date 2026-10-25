@@ -2,13 +2,14 @@ import { CountUp } from "./feedback";
 import { Icon } from "./icons";
 import styles from "./page.module.css";
 
-type Tone = "total" | "pending" | "approved" | "rejected";
+type Tone = "total" | "pending" | "approved" | "rejected" | "reimbursed";
 
 const TONE_CLASS: Record<Tone, string> = {
   total: styles.toneTotal,
   pending: styles.tonePending,
   approved: styles.toneApproved,
   rejected: styles.toneRejected,
+  reimbursed: styles.toneReimbursed,
 };
 
 // A tiny trend line for the last few weeks.

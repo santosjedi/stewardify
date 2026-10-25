@@ -365,6 +365,19 @@
   --tone-soft: #fdeeee;
 }
 
+.toneReimbursed {
+  --tone: #1e40af;
+  --tone-soft: #eaf0fd;
+}
+
+/* The second row of cards: reimbursements */
+.summaryTwo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: -16px 0 28px;
+}
+
 .cardTop {
   display: flex;
   align-items: center;
@@ -532,6 +545,11 @@
   color: var(--rejected-text);
 }
 
+.reimbursed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
 /* "Previous feedback" and the rejection feedback on the edit page */
 .feedback {
   display: flex;
@@ -584,6 +602,10 @@
 
 .row_rejected {
   border-left: 4px solid #dc2626;
+}
+
+.row_reimbursed {
+  border-left: 4px solid #1e40af;
 }
 
 /* "Needed by" / "Revise by" chip: amber when close, red when overdue */
@@ -1016,6 +1038,10 @@
 
 .event_rejected::before {
   background: var(--rejected-text);
+}
+
+.event_reimbursed::before {
+  background: #1e40af;
 }
 
 .eventText {

@@ -9,25 +9,31 @@ export type Reminder = {
   title: string;
   date: string; // a plain date for deadlines, a timestamp for decisions
   overdue: boolean;
-  status: "pending" | "approved" | "rejected";
+  status: "pending" | "approved" | "rejected" | "reimbursed";
   href: string;
 };
 
 type Row = {
   id: string;
   description: string;
-  status: "pending" | "approved" | "rejected";
+  status: "pending" | "approved" | "rejected" | "reimbursed";
   submitted_by: string;
   needed_by: string | null;
   revise_by: string | null;
   reviewed_at: string | null;
+  reimbursed_at: string | null;
 };
+
+// When the latest decision on an expense happened (being reimbursed counts too).
+function decidedAt(e: Row) {
+  return e.status === "reimbursed" ? e.reimbursed_at : e.reviewed_at;
+}
 
 // Everything that needs this person's attention. Worked out once per page load.
 //   Approvers: other people's pending expenses needed within 3 days, or overdue.
 //   Everyone: their own rejected expenses to revise within 3 days, or overdue,
-//   and their own expenses approved or rejected since they last marked
-//   reminders as read.
+//   and their own expenses approved, rejected, or reimbursed since they last
+//   marked reminders as read.
 // "This week" counts the same deadlines over the next 7 days, for the banner.
 export const getReminders = cache(async (user: CurrentUser) => {
   const supabase = await createClient();
@@ -38,7 +44,7 @@ export const getReminders = cache(async (user: CurrentUser) => {
   const [{ data: rows }, { data: profile }] = await Promise.all([
     supabase
       .from("expenses")
-      .select("id, description, status, submitted_by, needed_by, revise_by, reviewed_at"),
+      .select("id, description, status, submitted_by, needed_by, revise_by, reviewed_at, reimbursed_at"),
     supabase.from("profiles").select("notifications_seen_at, created_at").eq("id", user.id).single(),
   ]);
 
@@ -80,15 +86,15 @@ export const getReminders = cache(async (user: CurrentUser) => {
         (e) =>
           e.submitted_by === user.id &&
           e.status !== "pending" &&
-          e.reviewed_at &&
-          (!seenSince || e.reviewed_at > seenSince)
+          decidedAt(e) &&
+          (!seenSince || decidedAt(e)! > seenSince)
       )
-      .sort((a, b) => b.reviewed_at!.localeCompare(a.reviewed_at!))
+      .sort((a, b) => decidedAt(b)!.localeCompare(decidedAt(a)!))
       .map((e) => ({
         id: e.id,
         kind: "decided" as const,
         title: e.description,
-        date: e.reviewed_at!,
+        date: decidedAt(e)!,
         overdue: false,
         status: e.status,
         href: "/",

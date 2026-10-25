@@ -70,8 +70,8 @@ async function Dashboard() {
         <h2 className={pageStyles.heading}>Dashboard</h2>
       </div>
       <p className={styles.scope}>
-        Spending means <strong>approved</strong> expenses, counted by their expense date. Pending and
-        rejected expenses aren&apos;t included.
+        Spending means <strong>approved</strong> expenses (including ones already reimbursed), counted by
+        their expense date. Pending and rejected expenses aren&apos;t included.
       </p>
 
       <Projection projection={projection} />

@@ -155,6 +155,10 @@
   background: #16a34a;
 }
 
+.dotReimbursed {
+  background: #1e40af;
+}
+
 .itemText {
   display: flex;
   flex-direction: column;

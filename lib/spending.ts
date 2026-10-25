@@ -1,4 +1,4 @@
-import type { Status } from "@/lib/expenses";
+import { isSpent, type Status } from "@/lib/expenses";
 
 // The few columns the dashboard needs from each expense.
 export type SpendingRow = {
@@ -47,9 +47,9 @@ export function recentMonths(today: Today, count: number) {
   return months;
 }
 
-// Spending = approved expenses only, counted by their expense date.
+// Spending = approved (and later reimbursed) expenses, counted by their expense date.
 function approved(rows: SpendingRow[]) {
-  return rows.filter((r) => r.status === "approved");
+  return rows.filter((r) => isSpent(r.status));
 }
 
 export function spendingByMonth(rows: SpendingRow[], months: string[]) {
@@ -87,9 +87,9 @@ export function monthProjection(rows: SpendingRow[], today: Today) {
   for (const row of rows) {
     const month = row.expense_date.slice(0, 7);
     const amount = Number(row.amount_php);
-    if (row.status === "approved" && month === thisMonth && row.expense_date <= todayKey) spentSoFar += amount;
+    if (isSpent(row.status) && month === thisMonth && row.expense_date <= todayKey) spentSoFar += amount;
     if (row.status === "pending" && month === thisMonth) pendingThisMonth += amount;
-    if (row.status === "approved" && month === lastMonth) lastMonthTotal += amount;
+    if (isSpent(row.status) && month === lastMonth) lastMonthTotal += amount;
   }
 
   const daysSoFar = today.day;

@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
-import { categoryLabel, EXPENSE_COLUMNS, type Expense, type Status } from "@/lib/expenses";
+import { todayISO } from "@/lib/dates";
+import { categoryLabel, EXPENSE_COLUMNS, isSpent, type Expense, type Status } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { getReminders } from "@/lib/reminders";
@@ -88,10 +89,21 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
 
   const expenses = data as unknown as Expense[];
   const total = expenses.reduce((sum, e) => sum + Number(e.amount_php), 0);
-  const count = (status: Status) => expenses.filter((e) => e.status === status).length;
+  // "Approved" includes expenses that have since been reimbursed.
+  const matches = (e: Expense, status: Status) => (status === "approved" ? isSpent(e.status) : e.status === status);
+  const count = (status: Status) => expenses.filter((e) => matches(e, status)).length;
   const receiptUrls = await getReceiptUrls(supabase, expenses.map((e) => e.receipt_path));
   const trend = (status?: Status, amount = false) =>
-    weeklySeries(expenses, (e) => (status && e.status !== status ? 0 : amount ? Number(e.amount_php) : 1));
+    weeklySeries(expenses, (e) => (status && !matches(e, status) ? 0 : amount ? Number(e.amount_php) : 1));
+
+  // Reimbursement summary for the signed-in person's own expenses.
+  const thisMonth = todayISO().slice(0, 7);
+  const mine = expenses.filter((e) => e.submitted_by === userId);
+  const awaiting = mine.filter((e) => e.status === "approved");
+  const reimbursedThisMonth = mine.filter(
+    (e) => e.status === "reimbursed" && e.reimbursed_on?.startsWith(thisMonth)
+  );
+  const sum = (list: Expense[]) => list.reduce((total, e) => total + Number(e.amount_php), 0);
 
   const items: ListItem[] = expenses.map((e) => {
     const receiptUrl = e.receipt_path ? receiptUrls.get(e.receipt_path) : undefined;
@@ -120,10 +132,17 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
             <DueChip expense={e} />
             {e.status !== "pending" && (
               <span className={styles.review}>
-                {e.status === "approved" ? "Approved" : "Rejected"} by{" "}
+                {e.status === "rejected" ? "Rejected" : "Approved"} by{" "}
                 {e.reviewer?.full_name ?? "an approver"}
                 {e.reviewed_at && ` · ${formatDateTime(e.reviewed_at)}`}
                 {e.review_comment && <span className={styles.comment}>“{e.review_comment}”</span>}
+              </span>
+            )}
+            {e.status === "reimbursed" && (
+              <span className={styles.review}>
+                Reimbursed via {e.reimbursed_via}
+                {e.reimbursed_on && ` · paid ${formatDate(e.reimbursed_on)}`}
+                {e.reimbursement_ref && ` · Ref ${e.reimbursement_ref}`}
               </span>
             )}
             <PreviousFeedback expense={e} />
@@ -161,10 +180,28 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
         <StatCard label="Approved" value={count("approved")} format="number" tone="approved" icon="check" series={trend("approved")} />
         <StatCard label="Rejected" value={count("rejected")} format="number" tone="rejected" icon="cross" series={trend("rejected")} />
       </section>
+      <section className={styles.summaryTwo}>
+        <StatCard
+          label="Awaiting reimbursement"
+          value={sum(awaiting)}
+          format="pesos"
+          tone="approved"
+          icon="hourglass"
+          series={weeklySeries(mine, (e) => (e.status === "approved" ? Number(e.amount_php) : 0))}
+        />
+        <StatCard
+          label="Reimbursed this month"
+          value={sum(reimbursedThisMonth)}
+          format="pesos"
+          tone="reimbursed"
+          icon="wallet"
+          series={weeklySeries(mine, (e) => (e.status === "reimbursed" ? Number(e.amount_php) : 0))}
+        />
+      </section>
 
       <ExpenseList
         items={items}
-        chips={["pending", "approved", "rejected"]}
+        chips={["pending", "approved", "rejected", "reimbursed"]}
         listClassName={styles.list}
         empty={
           <EmptyState

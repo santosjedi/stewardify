@@ -6,7 +6,17 @@ const LABELS: Record<Status, string> = {
   pending: "Pending",
   approved: "Approved",
   rejected: "Rejected",
+  reimbursed: "Reimbursed",
 };
+
+// What one log entry says happened.
+function eventText(d: Expense["decisions"][number]) {
+  if (d.kind === "resubmission") return "Fixed and resubmitted";
+  if (d.kind === "reimbursement") return "Marked as reimbursed";
+  if (d.kind === "undo_reimbursement") return "Reimbursement undone";
+  if (d.new_status === "pending") return "Moved back to pending";
+  return LABELS[d.new_status];
+}
 
 // A small, fold-out timeline of every decision on an expense, oldest first.
 // Shown only once someone has made a decision.
@@ -31,17 +41,14 @@ export function Activity({ expense, open = false }: { expense: Expense; open?: b
         {decisions.map((d) => (
           <li key={d.id} className={`${styles.event} ${styles[`event_${d.new_status}`]}`}>
             <span className={styles.eventText}>
-              {d.kind === "resubmission"
-                ? "Fixed and resubmitted"
-                : d.new_status === "pending"
-                  ? "Moved back to pending"
-                  : LABELS[d.new_status]}{" "}
-              by {d.decider?.full_name ?? (d.kind === "resubmission" ? "the submitter" : "an approver")}
-              {d.old_status !== "pending" && d.new_status !== "pending" && (
+              {eventText(d)} by{" "}
+              {d.decider?.full_name ?? (d.kind === "resubmission" ? "the submitter" : "an approver")}
+              {d.kind === "decision" && d.old_status !== "pending" && d.new_status !== "pending" && (
                 <> (was {LABELS[d.old_status]})</>
               )}
             </span>
             <span className={styles.eventTime}>{formatDateTime(d.created_at)}</span>
+            {d.details && <span className={styles.eventTime}>{d.details}</span>}
             {d.comment && <span className={styles.eventComment}>“{d.comment}”</span>}
           </li>
         ))}

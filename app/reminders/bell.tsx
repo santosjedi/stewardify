@@ -93,9 +93,11 @@ export function Bell({ reminders }: { reminders: Shown[] }) {
                               r.overdue
                                 ? styles.dotOverdue
                                 : kind === "decided"
-                                  ? r.status === "approved"
-                                    ? styles.dotApproved
-                                    : styles.dotRejected
+                                  ? r.status === "reimbursed"
+                                    ? styles.dotReimbursed
+                                    : r.status === "approved"
+                                      ? styles.dotApproved
+                                      : styles.dotRejected
                                   : styles.dotSoon
                             }`}
                           />

@@ -10,6 +10,7 @@ const LABELS: Record<Status, string> = {
   pending: "Pending",
   approved: "Approved",
   rejected: "Rejected",
+  reimbursed: "Reimbursed",
 };
 
 const OPTIONS: { value: Status; label: string }[] = [

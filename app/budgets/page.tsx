@@ -39,7 +39,7 @@ async function Budgets() {
     supabase
       .from("expenses")
       .select("category, amount_php")
-      .eq("status", "approved")
+      .in("status", ["approved", "reimbursed"])
       .gte("expense_date", `${month}-01`)
       .lt("expense_date", nextMonth),
   ]);

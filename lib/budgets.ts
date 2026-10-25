@@ -1,3 +1,4 @@
+import { isSpent } from "@/lib/expenses";
 import type { SpendingRow, Today } from "@/lib/spending";
 
 export type Budget = { category: string; monthly_amount: number | string };
@@ -26,11 +27,11 @@ function daysIn(year: number, month: number) {
   return new Date(Date.UTC(year, month, 0)).getUTCDate();
 }
 
-// Approved spending per category in one month (by expense date).
+// Approved (and reimbursed) spending per category in one month (by expense date).
 function spentByCategory(rows: SpendingRow[], month: string) {
   const totals = new Map<string, number>();
   for (const row of rows) {
-    if (row.status !== "approved" || !row.expense_date.startsWith(month)) continue;
+    if (!isSpent(row.status) || !row.expense_date.startsWith(month)) continue;
     totals.set(row.category, (totals.get(row.category) ?? 0) + Number(row.amount_php));
   }
   return totals;
