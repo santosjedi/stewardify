@@ -3,55 +3,88 @@
   max-width: 720px;
   margin: 0 auto;
   padding: 32px 16px;
-  font-family: var(--font-geist-sans);
 }
 
-/* Header: app name on the left, signed-in person on the right */
+/* Header: a blue-to-navy band with the logo, links, and who is signed in */
 .header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 16px;
+  margin-bottom: 36px;
+  padding: 14px 16px 14px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--header-gradient);
+  color: #ffffff;
+  box-shadow: var(--shadow);
 }
 
 .brandRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 20px;
+  gap: 12px 24px;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--navy);
+}
+
+.brandName {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Page titles (e.g. "Submit expense") */
 .title {
-  font-size: 28px;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
 }
 
-/* Links between pages (approvers only) */
+/* Links between pages (approvers only): a pill switcher on the blue band */
 .nav {
   display: flex;
-  gap: 4px;
-  font-size: 14px;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 13px;
 }
 
 .navLink,
 .navActive {
-  padding: 6px 10px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  transition: color 0.15s, background 0.15s;
 }
 
 .navLink:hover {
-  border-color: var(--border);
-  color: var(--foreground);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .navActive {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--foreground);
-  font-weight: 500;
+  background: #ffffff;
+  color: var(--navy);
+  font-weight: 600;
 }
 
 .user {
@@ -61,27 +94,70 @@
   font-size: 14px;
 }
 
+.avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.userText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
 .userName {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .role {
-  padding: 2px 10px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
   font-size: 12px;
-  color: var(--muted);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.75);
   text-transform: capitalize;
 }
 
 .signOut {
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--foreground);
+  margin-left: 6px;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  background: transparent;
+  color: #ffffff;
   font: inherit;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.signOut:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Phones: logo and links on one line, the person on the next */
+@media (max-width: 560px) {
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .user {
+    width: 100%;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .signOut {
+    margin-left: auto;
+  }
 }
 
 /* "My expenses" heading with the Submit button */
@@ -94,16 +170,24 @@
 }
 
 .heading {
-  font-size: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .newButton {
-  padding: 9px 14px;
-  border-radius: 8px;
-  background: var(--foreground);
-  color: var(--background);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: 14px;
   font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.newButton:hover {
+  background: var(--accent-hover);
 }
 
 /* Approvers: "2 expenses are waiting for review" */
@@ -115,14 +199,16 @@
   gap: 8px;
   margin-bottom: 16px;
   padding: 12px 16px;
-  border-radius: 12px;
-  background: var(--pending-bg);
-  color: var(--pending-text);
+  border-left: 4px solid var(--orange);
+  border-radius: var(--radius);
+  background: var(--orange-soft);
+  color: var(--foreground);
   font-size: 14px;
 }
 
 .reviewBannerAction {
   font-weight: 600;
+  color: var(--orange-text);
 }
 
 .message {
