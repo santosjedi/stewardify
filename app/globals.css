@@ -1,29 +1,49 @@
-/* Stewardify colors, all in one place. Light mode only. */
+/* Stewardify colors, all in one place. Light mode only. (Common Ground) */
 :root {
   color-scheme: light;
 
-  --background: #f8fafc;
+  /* The design tokens */
+  --onboard-primary: #255c4d; /* Evergreen */
+  --onboard-accent: #3d91e0; /* Open Sky, decoration only: never text, never behind text */
+  --onboard-accent-strong: #1d6fb8; /* Open Sky, deeper: blue buttons (white text) and links on white */
+  --onboard-soft: #cee1d9; /* Sage */
+  --onboard-tint: #d4e2ef; /* Clear Day */
+  --onboard-bg: #e7f0ea; /* Meadow */
+  --onboard-ink: #183129; /* Forest */
+
+  --onboard-font-heading: var(--font-heading), "Sora", system-ui, sans-serif;
+  --onboard-font-body: var(--font-body), "Figtree", "Segoe UI", system-ui, sans-serif;
+  --onboard-font-label: var(--font-label), "JetBrains Mono", ui-monospace, monospace;
+
+  /* What the rest of the app uses, built from the tokens above */
+  --background: var(--onboard-bg);
   --surface: #ffffff;
-  --surface-muted: #f1f5f9;
-  --border: #e2e8f0;
-  --foreground: #0f172a;
-  --muted: #475569;
-  --placeholder: #64748b;
+  --surface-muted: #f1f6f2;
+  --border: #d3e0d7;
+  --foreground: var(--onboard-ink);
+  --muted: #4f6358;
+  --placeholder: #56695f;
 
-  --primary: #1e4e79;
-  --primary-hover: #173d60;
+  --primary: var(--onboard-primary);
+  --primary-hover: #1c4a3d;
   --on-primary: #ffffff;
-  --link: #1d6fa8;
-  --blue: #2483c5; /* icons, borders, and large headings only, never small text */
+  --link: var(--onboard-primary); /* readable on white and on every soft background */
+  --link-blue: var(--onboard-accent-strong); /* blue links, on white only */
+  --blue: var(--onboard-primary); /* lines, dots, icons, focus outlines */
 
-  --band: #16303d;
+  --band: var(--onboard-ink);
   --band-text: #ffffff;
-  --band-accent: #fcc715;
+  --band-accent: var(--onboard-soft);
 
-  --gold: #fcc715;
-  --gold-hover: #ebb800;
-  --on-gold: #0f172a;
-  --orange: #f4923d; /* borders and decorations only, never text */
+  /* Blue fills (accent buttons, avatars, badges) always carry white text */
+  --gold: var(--onboard-accent-strong);
+  --gold-hover: #185e9c;
+  --on-gold: #ffffff;
+  --orange: var(--onboard-accent); /* decorative only */
+
+  /* Soft areas (banners, Reminder of the day, highlights), with Forest text */
+  --soft: var(--onboard-soft);
+  --tint: var(--onboard-tint);
 
   --pending-bg: #fef3c7;
   --pending-text: #92400e;
@@ -31,16 +51,19 @@
   --approved-text: #166534;
   --rejected-bg: #fee2e2;
   --rejected-text: #991b1b;
+  --reimbursed-bg: #ede9fe;
+  --reimbursed-text: #5b21b6;
 
-  --disabled-bg: #cbd5e1;
-  --disabled-text: #334155;
+  --disabled-bg: #cbd8cf;
+  --disabled-text: #2c3e36;
 
   --radius: 12px;
   --radius-lg: 18px;
-  --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.05);
+  --shadow: 0 1px 2px rgba(24, 49, 41, 0.05), 0 4px 16px rgba(24, 49, 41, 0.06);
 
-  --font-heading-family: var(--font-heading), Georgia, serif;
-  --font-body-family: var(--font-body), system-ui, sans-serif;
+  --font-heading-family: var(--onboard-font-heading);
+  --font-body-family: var(--onboard-font-body);
+  --font-label-family: var(--onboard-font-label);
 }
 
 html {
@@ -60,9 +83,9 @@ body {
   color: var(--foreground);
   /* Soft brand-colored glows and a faint dot pattern, so pages don't feel flat */
   background:
-    radial-gradient(circle at 0% 0%, rgba(36, 131, 197, 0.07), transparent 35%),
-    radial-gradient(circle at 100% 0%, rgba(252, 199, 21, 0.08), transparent 30%),
-    radial-gradient(#e2e8f0 1px, transparent 1px) 0 0 / 22px 22px,
+    radial-gradient(circle at 0% 0%, rgba(37, 92, 77, 0.07), transparent 35%),
+    radial-gradient(circle at 100% 0%, rgba(61, 145, 224, 0.08), transparent 30%),
+    radial-gradient(#d3e0d7 1px, transparent 1px) 0 0 / 22px 22px,
     var(--background);
   font-family: var(--font-body-family);
   line-height: 1.5;
@@ -81,13 +104,12 @@ a {
   text-decoration: none;
 }
 
-/* Headings use Fraunces: semi-bold, with its soft rounded style turned all the way up. */
+/* Headings use Sora. */
 h1,
 h2,
 h3 {
   font-family: var(--font-heading-family);
-  font-weight: 600;
-  font-variation-settings: "SOFT" 100;
+  font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.2;
 }

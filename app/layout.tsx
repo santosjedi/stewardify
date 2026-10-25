@@ -1,18 +1,22 @@
 import type { Metadata } from "next";
-import { Epilogue, Fraunces } from "next/font/google";
+import { Figtree, JetBrains_Mono, Sora } from "next/font/google";
 import { Toaster } from "./feedback";
 import "./globals.css";
 
-// Fraunces for headings and big numbers (with its "soft" rounded style available),
-// Epilogue for everything else. Both are loaded by Next.js itself.
-const heading = Fraunces({
+// Sora for headings and big numbers, Figtree for everything else, and
+// JetBrains Mono for small uppercase labels and timestamps. Loaded by Next.js itself.
+const heading = Sora({
   variable: "--font-heading",
   subsets: ["latin"],
-  axes: ["SOFT"],
 });
 
-const body = Epilogue({
+const body = Figtree({
   variable: "--font-body",
+  subsets: ["latin"],
+});
+
+const label = JetBrains_Mono({
+  variable: "--font-label",
   subsets: ["latin"],
 });
 
@@ -23,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${heading.variable} ${body.variable}`}>
+    <html lang="en" className={`${heading.variable} ${body.variable} ${label.variable}`}>
       <body>
         {children}
         <Toaster />

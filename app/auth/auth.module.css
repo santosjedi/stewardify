@@ -46,7 +46,6 @@
   font-family: var(--font-heading-family);
   font-size: 21px;
   font-weight: 600;
-  font-variation-settings: "SOFT" 100;
 }
 
 .headline {
@@ -245,7 +244,7 @@
 .field input:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+  box-shadow: 0 0 0 3px rgba(37, 92, 77, 0.18);
 }
 
 /* Shifts color and grows a little on hover */
@@ -264,7 +263,7 @@
 .button:hover:not(:disabled) {
   background: var(--primary-hover);
   transform: scale(1.02);
-  box-shadow: 0 6px 18px rgba(30, 78, 121, 0.25);
+  box-shadow: 0 6px 18px rgba(37, 92, 77, 0.25);
 }
 
 .button:active:not(:disabled) {
@@ -301,7 +300,7 @@
 }
 
 .switch a {
-  color: var(--link);
+  color: var(--link-blue);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;

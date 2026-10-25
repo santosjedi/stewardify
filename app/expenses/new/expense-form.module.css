@@ -43,7 +43,7 @@
 .field textarea:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+  box-shadow: 0 0 0 3px rgba(37, 92, 77, 0.18);
 }
 
 .field textarea {
@@ -72,7 +72,7 @@
 .dragging {
   border-style: solid;
   border-color: var(--primary);
-  background: #e8f1fa;
+  background: var(--soft);
   transform: scale(1.01);
 }
 

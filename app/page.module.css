@@ -46,14 +46,13 @@
   height: 34px;
   border-radius: 10px;
   background: var(--gold);
-  color: var(--band);
+  color: var(--on-gold);
 }
 
 .brandName {
   font-family: var(--font-heading-family);
   font-size: 21px;
   font-weight: 600;
-  font-variation-settings: "SOFT" 100;
   letter-spacing: -0.01em;
 }
 
@@ -85,7 +84,7 @@
 /* The current page: tinted, with a gold marker */
 .sidebarActive,
 .sidebarActive:hover {
-  background: #e8f1fa;
+  background: var(--soft);
   color: var(--primary);
   font-weight: 700;
 }
@@ -98,7 +97,7 @@
   bottom: 8px;
   width: 4px;
   border-radius: 0 4px 4px 0;
-  background: var(--gold);
+  background: var(--orange);
 }
 
 /* ---------- Friendly page header (the navy band) ---------- */
@@ -113,8 +112,8 @@
   padding: 22px 22px 22px 26px;
   border-radius: var(--radius-lg);
   background:
-    radial-gradient(circle at 90% -20%, rgba(252, 199, 21, 0.18), transparent 40%),
-    radial-gradient(circle at 0% 120%, rgba(36, 131, 197, 0.35), transparent 45%),
+    radial-gradient(circle at 90% -20%, rgba(61, 145, 224, 0.18), transparent 40%),
+    radial-gradient(circle at 0% 120%, rgba(37, 92, 77, 0.35), transparent 45%),
     var(--band);
   color: var(--band-text);
   box-shadow: var(--shadow);
@@ -199,9 +198,9 @@
   margin: -12px 0 28px;
   padding: 14px 18px 12px 20px;
   border: 1px solid var(--border);
-  border-left: 3px solid var(--gold);
+  border-left: 3px solid var(--orange);
   border-radius: var(--radius);
-  background: var(--surface);
+  background: var(--tint);
   animation: verseIn 0.8s ease-out;
 }
 
@@ -217,6 +216,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  font-family: var(--font-label-family);
   color: var(--muted);
 }
 
@@ -225,7 +225,6 @@
   font-size: 17px;
   font-style: italic;
   font-weight: 500;
-  font-variation-settings: "SOFT" 100;
   line-height: 1.4;
   color: var(--foreground);
 }
@@ -267,8 +266,8 @@
 .newButton {
   padding: 11px 20px;
   border-radius: 999px;
-  background: var(--gold);
-  color: var(--on-gold);
+  background: var(--primary);
+  color: var(--on-primary);
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
@@ -276,7 +275,7 @@
 }
 
 .newButton:hover {
-  background: var(--gold-hover);
+  background: var(--primary-hover);
 }
 
 /* Approvers: "2 expenses are waiting for review" */
@@ -289,9 +288,10 @@
   margin-bottom: 20px;
   padding: 14px 18px;
   border: 1px solid var(--border);
-  border-left: 4px solid var(--orange);
+  border-left: 4px solid var(--primary);
   border-radius: var(--radius);
-  background: var(--surface);
+  background: var(--soft);
+  color: var(--foreground);
   font-size: 14px;
 }
 
@@ -305,10 +305,10 @@
   margin-bottom: 16px;
   padding: 12px 18px;
   border: 1px solid var(--border);
-  border-left: 4px solid var(--gold);
+  border-left: 4px solid var(--orange);
   border-radius: var(--radius);
-  background: var(--pending-bg);
-  color: var(--pending-text);
+  background: var(--tint);
+  color: var(--foreground);
   font-size: 14px;
   font-weight: 500;
 }
@@ -335,7 +335,7 @@
 
 .card {
   --tone: var(--blue);
-  --tone-soft: #eaf3fb;
+  --tone-soft: var(--soft);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -346,8 +346,8 @@
 }
 
 .toneTotal {
-  --tone: #2483c5;
-  --tone-soft: #eaf3fb;
+  --tone: #255c4d;
+  --tone-soft: var(--soft);
 }
 
 .tonePending {
@@ -366,8 +366,8 @@
 }
 
 .toneReimbursed {
-  --tone: #1e40af;
-  --tone-soft: #eaf0fd;
+  --tone: var(--reimbursed-text);
+  --tone-soft: #f3f0fe;
 }
 
 /* The second row of cards: reimbursements */
@@ -392,7 +392,7 @@
   border-radius: 10px;
   background: var(--surface);
   color: var(--tone);
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 3px rgba(24, 49, 41, 0.08);
 }
 
 .cardLabel {
@@ -405,7 +405,6 @@
   font-family: var(--font-heading-family);
   font-size: 28px;
   font-weight: 600;
-  font-variation-settings: "SOFT" 100;
   font-variant-numeric: tabular-nums;
   line-height: 1.15;
 }
@@ -467,7 +466,7 @@
   z-index: 1;
   background: var(--surface);
   transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 22px rgba(24, 49, 41, 0.08);
 }
 
 .row + .row {
@@ -546,8 +545,8 @@
 }
 
 .reimbursed {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--reimbursed-bg);
+  color: var(--reimbursed-text);
 }
 
 /* "Previous feedback" and the rejection feedback on the edit page */
@@ -605,7 +604,7 @@
 }
 
 .row_reimbursed {
-  border-left: 4px solid #1e40af;
+  border-left: 4px solid var(--reimbursed-text);
 }
 
 /* "Needed by" / "Revise by" chip: amber when close, red when overdue */
@@ -619,7 +618,7 @@
 }
 
 .dueLater {
-  background: #e8f1fa;
+  background: var(--soft);
   color: var(--primary);
 }
 
@@ -665,7 +664,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #e8f1fa;
+  background: var(--soft);
   color: var(--primary);
 }
 
@@ -785,7 +784,7 @@
 
 .search:focus-within {
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+  box-shadow: 0 0 0 3px rgba(37, 92, 77, 0.18);
 }
 
 .search input {
@@ -827,7 +826,7 @@
   position: fixed;
   inset: 0;
   z-index: 40;
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(24, 49, 41, 0.4);
   animation: fadeIn 0.2s ease-out;
 }
 
@@ -840,7 +839,7 @@
   flex-direction: column;
   width: min(440px, 100%);
   background: var(--surface);
-  box-shadow: -12px 0 40px rgba(15, 23, 42, 0.2);
+  box-shadow: -12px 0 40px rgba(24, 49, 41, 0.2);
   animation: slideIn 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
@@ -869,6 +868,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  font-family: var(--font-label-family);
   color: var(--muted);
 }
 
@@ -915,7 +915,6 @@
   font-family: var(--font-heading-family);
   font-size: 32px;
   font-weight: 600;
-  font-variation-settings: "SOFT" 100;
 }
 
 .detailFacts {
@@ -1053,7 +1052,7 @@
 }
 
 .event_pending::before {
-  background: var(--gold);
+  background: #d99a00;
 }
 
 .event_approved::before {
@@ -1065,7 +1064,7 @@
 }
 
 .event_reimbursed::before {
-  background: #1e40af;
+  background: var(--reimbursed-text);
 }
 
 .eventText {
@@ -1075,6 +1074,8 @@
 
 .eventTime {
   color: var(--muted);
+  font-family: var(--font-label-family);
+  font-size: 12px;
 }
 
 .eventComment {
@@ -1123,7 +1124,7 @@
 }
 
 .viewer::backdrop {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(24, 49, 41, 0.8);
 }
 
 .viewerImage {
@@ -1155,7 +1156,7 @@
     padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
     border-top: 1px solid var(--border);
     border-right: none;
-    box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 -4px 20px rgba(24, 49, 41, 0.06);
   }
 
   .sidebarBrand {

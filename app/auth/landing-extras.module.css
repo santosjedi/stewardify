@@ -17,8 +17,8 @@
   pointer-events: none;
   background: radial-gradient(
     360px circle at var(--spot-x, 50%) var(--spot-y, 50%),
-    rgba(252, 199, 21, 0.16),
-    rgba(36, 131, 197, 0.1) 40%,
+    rgba(61, 145, 224, 0.16),
+    rgba(37, 92, 77, 0.1) 40%,
     transparent 70%
   );
   opacity: 0;
@@ -75,7 +75,7 @@
 
 .magnetic:hover {
   background: var(--gold-hover);
-  box-shadow: 0 8px 22px rgba(252, 199, 21, 0.3);
+  box-shadow: 0 8px 22px rgba(61, 145, 224, 0.3);
   transform: translate(var(--pull-x), var(--pull-y)) scale(1.04);
 }
 
@@ -281,7 +281,7 @@
   border: 1px dashed #c8bfae;
   border-radius: 4px;
   background: #ffffff;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 2px 6px rgba(24, 49, 41, 0.08);
   color: #57534e;
   font-size: 12px;
   font-family: "Courier New", monospace;
@@ -329,7 +329,7 @@
 .bubbleMe {
   align-self: flex-end;
   border-radius: 14px 14px 4px 14px;
-  background: #d6e6f5;
+  background: var(--soft);
 }
 
 /* The clean dashboard */
@@ -358,7 +358,6 @@
   font-family: var(--font-heading-family);
   font-size: 20px;
   font-weight: 600;
-  font-variation-settings: "SOFT" 100;
 }
 
 .dashStats small {
@@ -416,7 +415,7 @@
   left: var(--pos);
   width: 3px;
   margin-left: -1.5px;
-  background: var(--gold);
+  background: var(--orange);
   pointer-events: none;
 }
 
@@ -432,7 +431,7 @@
   background: var(--gold);
   color: var(--on-gold);
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+  box-shadow: 0 4px 14px rgba(24, 49, 41, 0.2);
   transform: translate(-50%, -50%);
 }
 
@@ -467,13 +466,13 @@
 .shapeGold {
   width: 220px;
   height: 220px;
-  background: radial-gradient(circle, rgba(252, 199, 21, 0.22), transparent 70%);
+  background: radial-gradient(circle, rgba(61, 145, 224, 0.22), transparent 70%);
 }
 
 .shapeBlue {
   width: 280px;
   height: 280px;
-  background: radial-gradient(circle, rgba(36, 131, 197, 0.16), transparent 70%);
+  background: radial-gradient(circle, rgba(37, 92, 77, 0.16), transparent 70%);
 }
 
 .shapeLeft {
@@ -496,7 +495,7 @@
   right: 0;
   z-index: 50;
   height: 3px;
-  background: var(--gold);
+  background: var(--orange);
   transform: scaleX(var(--progress));
   transform-origin: left;
   pointer-events: none;

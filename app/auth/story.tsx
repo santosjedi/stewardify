@@ -91,27 +91,27 @@ export function RevealWords({ text, className = "" }: { text: string; className?
 const LOGOS: { name: string; color: string; mark: ReactNode }[] = [
   {
     name: "Lighthouse Fellowship",
-    color: "#2483c5",
+    color: "#255c4d",
     mark: <path d="M10 21h4l-1-12h-2l-1 12zM9 9h6M12 5v4M12 5 8 3M12 5l4-2M6 21h12" />,
   },
   {
     name: "Harvest Missions",
-    color: "#f4923d",
+    color: "#1d6fb8",
     mark: <path d="M12 21V9M12 9c-3 0-5-2-5-5 3 0 5 2 5 5zm0 0c3 0 5-2 5-5-3 0-5 2-5 5zM12 15c-3 0-5-2-5-5 3 0 5 2 5 5zm0 0c3 0 5-2 5-5-3 0-5 2-5 5z" />,
   },
   {
     name: "Living Waters Church",
-    color: "#0e7490",
+    color: "#2f7562",
     mark: <path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11zM9 15a3 3 0 0 0 3 3" />,
   },
   {
     name: "Mustard Seed Scholars",
-    color: "#a16207",
+    color: "#5c7a3e",
     mark: <path d="M12 21v-6M12 15c-4 0-6-3-6-7 4 0 6 3 6 7zm0 0c4 0 6-3 6-7-4 0-6 3-6 7zM9 21h6" />,
   },
   {
     name: "Cornerstone Youth",
-    color: "#16303d",
+    color: "#183129",
     mark: <path d="M4 20h16M6 20V10l6-6 6 6v10M10 20v-5h4v5" />,
   },
 ];

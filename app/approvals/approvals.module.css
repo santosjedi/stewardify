@@ -63,7 +63,7 @@
 /* Lifts slightly on hover */
 .item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 26px rgba(24, 49, 41, 0.08);
 }
 
 .top {
@@ -125,7 +125,7 @@
 .dateField input:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+  box-shadow: 0 0 0 3px rgba(37, 92, 77, 0.18);
 }
 
 .reviewForm {
@@ -151,7 +151,7 @@
 .commentBox:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+  box-shadow: 0 0 0 3px rgba(37, 92, 77, 0.18);
 }
 
 .error {
@@ -209,10 +209,10 @@
 /* "Mark as reimbursed" */
 .reimburseButton {
   padding: 8px 16px;
-  border: 1px solid #1e40af;
+  border: 1px solid var(--reimbursed-text);
   border-radius: 999px;
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--reimbursed-bg);
+  color: var(--reimbursed-text);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -269,7 +269,7 @@
 .formField select:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+  box-shadow: 0 0 0 3px rgba(37, 92, 77, 0.18);
 }
 
 .optionalText {
@@ -292,7 +292,7 @@
   gap: 10px;
   padding: 10px 14px;
   border: 1px solid var(--border);
-  border-left: 4px solid #1e40af;
+  border-left: 4px solid var(--reimbursed-text);
   border-radius: var(--radius);
   background: var(--surface);
   font-size: 14px;

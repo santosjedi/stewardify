@@ -46,7 +46,8 @@ export function ShowQueuedToast() {
   return null;
 }
 
-const CONFETTI_COLORS = ["#fcc715", "#2483c5", "#16303d", "#f4923d", "#166534"];
+// Evergreen, Open Sky, Sage, and Forest.
+const CONFETTI_COLORS = ["#255c4d", "#3d91e0", "#cee1d9", "#183129", "#3d91e0"];
 
 type Toast = { id: number; message: string };
 type Burst = { id: number; origin: Origin; pieces: CSSProperties[] };

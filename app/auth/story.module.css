@@ -32,6 +32,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  font-family: var(--font-label-family);
   color: var(--primary);
 }
 
@@ -110,7 +111,6 @@
   font-family: var(--font-heading-family);
   font-size: 20px;
   font-weight: 600;
-  font-variation-settings: "SOFT" 100;
 }
 
 .logo:hover {
@@ -278,7 +278,7 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   background: var(--surface);
-  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 14px 34px rgba(24, 49, 41, 0.12);
 }
 
 .storyCardTop {
@@ -332,8 +332,8 @@
 }
 
 .review {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--soft);
+  color: var(--foreground);
 }
 
 .approved {
@@ -409,6 +409,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  font-family: var(--font-label-family);
 }
 
 .sideLight .sideWho {
@@ -470,7 +471,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
-  box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 -8px 30px rgba(24, 49, 41, 0.08);
 }
 
 .deckCard:last-child {
@@ -557,7 +558,7 @@
 .stripCard:hover {
   transform: translateY(-6px);
   border-color: var(--blue);
-  box-shadow: 0 12px 32px rgba(36, 131, 197, 0.18);
+  box-shadow: 0 12px 32px rgba(37, 92, 77, 0.18);
 }
 
 .stripIcon {
@@ -598,10 +599,10 @@
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(circle at 20% 30%, rgba(252, 199, 21, 0.35), transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(36, 131, 197, 0.45), transparent 45%),
-    radial-gradient(circle at 60% 20%, rgba(244, 146, 61, 0.25), transparent 35%),
-    linear-gradient(160deg, #1e4e79, #16303d 60%, #0f1f28);
+    radial-gradient(circle at 20% 30%, rgba(61, 145, 224, 0.3), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(206, 225, 217, 0.3), transparent 45%),
+    radial-gradient(circle at 60% 20%, rgba(61, 145, 224, 0.15), transparent 35%),
+    linear-gradient(160deg, #255c4d, #183129 60%, #0f211b);
   animation: slowZoom 24s ease-in-out infinite alternate;
 }
 
@@ -623,7 +624,6 @@
   font-family: var(--font-heading-family);
   font-size: 42px;
   font-weight: 600;
-  font-variation-settings: "SOFT" 100;
   line-height: 1.25;
   color: #ffffff;
 }
@@ -647,8 +647,8 @@
   padding: 56px 24px;
   border-radius: var(--radius-lg);
   background:
-    radial-gradient(circle at 85% 0%, rgba(252, 199, 21, 0.2), transparent 40%),
-    radial-gradient(circle at 10% 100%, rgba(36, 131, 197, 0.35), transparent 45%),
+    radial-gradient(circle at 85% 0%, rgba(61, 145, 224, 0.2), transparent 40%),
+    radial-gradient(circle at 10% 100%, rgba(37, 92, 77, 0.35), transparent 45%),
     var(--band);
   color: var(--band-text);
   text-align: center;
