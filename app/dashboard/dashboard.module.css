@@ -41,7 +41,6 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-family: var(--font-label-family);
   color: var(--muted);
 }
 
@@ -83,6 +82,7 @@
 .facts strong {
   font-size: 15px;
   color: var(--foreground);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- Charts ---------- */
@@ -142,6 +142,7 @@
   color: var(--foreground);
   text-align: center;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .monthBarArea {
@@ -236,6 +237,7 @@
   align-items: flex-end;
   font-weight: 700;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .categoryValue small {
@@ -295,6 +297,7 @@
 .budgetPercent {
   font-weight: 700;
   color: var(--bar-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .budgetTrack {
@@ -316,6 +319,7 @@
 .budgetNumbers {
   font-size: 12px;
   color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- Recommendations ---------- */

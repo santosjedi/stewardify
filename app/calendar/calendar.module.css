@@ -234,6 +234,7 @@
 .agendaMain small {
   font-size: 12px;
   color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .agendaTone {

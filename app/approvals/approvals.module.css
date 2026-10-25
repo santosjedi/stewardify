@@ -300,6 +300,7 @@
 
 .owedItem strong {
   display: block;
+  font-variant-numeric: tabular-nums;
 }
 
 .owedItem small {

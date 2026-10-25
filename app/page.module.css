@@ -213,7 +213,6 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-family: var(--font-label-family);
   color: var(--muted);
 }
 
@@ -757,6 +756,7 @@
   font-size: 12px;
   font-weight: 600;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .chipOn .chipCount {
@@ -865,7 +865,6 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  font-family: var(--font-label-family);
   color: var(--muted);
 }
 
@@ -912,6 +911,7 @@
   font-family: var(--font-heading-family);
   font-size: 32px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .detailFacts {
@@ -1071,7 +1071,6 @@
 
 .eventTime {
   color: var(--muted);
-  font-family: var(--font-label-family);
   font-size: 12px;
 }
 

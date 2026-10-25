@@ -32,7 +32,6 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-family: var(--font-label-family);
   color: var(--primary);
 }
 
@@ -409,7 +408,6 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  font-family: var(--font-label-family);
 }
 
 .sideLight .sideWho {

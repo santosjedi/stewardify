@@ -13,7 +13,6 @@
 
   --onboard-font-heading: var(--font-heading), "Sora", system-ui, sans-serif;
   --onboard-font-body: var(--font-body), "Figtree", "Segoe UI", system-ui, sans-serif;
-  --onboard-font-label: var(--font-label), "JetBrains Mono", ui-monospace, monospace;
 
   /* What the rest of the app uses, built from the tokens above */
   --background: var(--onboard-bg);
@@ -63,7 +62,6 @@
 
   --font-heading-family: var(--onboard-font-heading);
   --font-body-family: var(--onboard-font-body);
-  --font-label-family: var(--onboard-font-label);
 }
 
 html {
