@@ -8,6 +8,7 @@ import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
 import { weeklySeries } from "@/lib/series";
 import { Activity, PreviousFeedback } from "./activity";
+import { DueChip } from "./due-chip";
 import { EmptyState } from "./empty-state";
 import { ExpenseDetail, initials } from "./expense-detail";
 import { ExpenseList, type ListItem } from "./expense-list";
@@ -97,6 +98,7 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
               {showSubmitter && `${submitter} · `}
               {formatDate(e.expense_date)} · {categoryLabel(e)}
             </span>
+            <DueChip expense={e} />
             {e.status !== "pending" && (
               <span className={styles.review}>
                 {e.status === "approved" ? "Approved" : "Rejected"} by{" "}

@@ -98,6 +98,36 @@
 }
 
 /* Approve / Reject form */
+.dateField {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.dateField span {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.dateField input {
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: 13px;
+}
+
+.dateField input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(36, 131, 197, 0.18);
+}
+
 .reviewForm {
   display: flex;
   flex-direction: column;

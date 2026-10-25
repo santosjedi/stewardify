@@ -33,6 +33,10 @@ export function ReviewForm({ expenseId }: { expenseId: string }) {
         placeholder="Comment (required to reject, optional to approve)"
         className={styles.commentBox}
       />
+      <label className={styles.dateField}>
+        Revise by <span>(optional, if rejecting)</span>
+        <input type="date" name="reviseBy" />
+      </label>
       {state?.error && <p className={styles.error}>{state.error}</p>}
       <div className={styles.buttons}>
         <button

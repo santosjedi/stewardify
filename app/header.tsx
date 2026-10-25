@@ -6,7 +6,7 @@ import { Icon } from "./icons";
 import { Logo } from "./logo";
 import styles from "./page.module.css";
 
-export type Page = "expenses" | "submit" | "dashboard" | "approvals" | "history";
+export type Page = "expenses" | "submit" | "calendar" | "dashboard" | "approvals" | "history";
 
 // "Good morning" / "Good afternoon" / "Good evening", by Philippine time.
 function greeting(now: Date) {
@@ -33,6 +33,7 @@ export function Header({ user, active }: { user: CurrentUser; active: Page }) {
   const links: { page: Page; href: string; label: string; icon: string }[] = [
     { page: "expenses", href: "/", label: "My Expenses", icon: "list" },
     { page: "submit", href: "/expenses/new", label: "Submit", icon: "plus" },
+    { page: "calendar", href: "/calendar", label: "Calendar", icon: "calendar" },
   ];
   if (user.role === "approver") {
     links.push(

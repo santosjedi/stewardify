@@ -8,6 +8,7 @@ const PATHS: Record<string, ReactNode> = {
   inbox: <path d="M3 13h5l2 3h4l2-3h5M5 5h14l2 8v6H3v-6l2-8z" />,
   history: <path d="M3 12a9 9 0 1 0 3-6.7M3 4v4h4M12 8v4l3 2" />,
   chart: <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />,
+  calendar: <path d="M4 6h16v14H4V6zM4 10h16M8 3v5M16 3v5" />,
   trend: <path d="M3 17l6-6 4 4 8-8M15 7h6v6" />,
 
   // Stat cards

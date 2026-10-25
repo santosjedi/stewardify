@@ -17,6 +17,7 @@ export type ExistingExpense = {
   category_other: string | null;
   amount_php: number;
   note: string | null;
+  needed_by: string | null;
   receiptUrl: string | null;
 };
 
@@ -180,6 +181,18 @@ export function ExpenseForm({
           />
         </label>
       )}
+
+      <label className={styles.field}>
+        <span>
+          Needed by <span className={styles.optional}>(optional: when you need it reviewed)</span>
+        </span>
+        <input
+          name="neededBy"
+          type="date"
+          min={existing ? undefined : today}
+          defaultValue={existing?.needed_by ?? undefined}
+        />
+      </label>
 
       <label className={styles.field}>
         <span>

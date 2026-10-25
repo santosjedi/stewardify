@@ -137,7 +137,13 @@ export function ExpenseList({
 }
 
 // The panel that slides in from the right with one expense's details.
-function SlideOver({ item, onClose }: { item: ListItem | null; onClose: () => void }) {
+export function SlideOver({
+  item,
+  onClose,
+}: {
+  item: Pick<ListItem, "title" | "detail"> | null;
+  onClose: () => void;
+}) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const returnTo = useRef<Element | null>(null);
 

@@ -72,6 +72,7 @@ async function EditExpense({ params }: { params: Promise<{ id: string }> }) {
           category_other: expense.category_other,
           amount_php: expense.amount_php,
           note: expense.note,
+          needed_by: expense.needed_by,
           receiptUrl: expense.receipt_path ? (receiptUrls.get(expense.receipt_path) ?? null) : null,
         }}
       />

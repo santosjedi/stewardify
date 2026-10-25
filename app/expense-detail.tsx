@@ -45,6 +45,18 @@ export function ExpenseDetail({ expense: e, receiptUrl }: { expense: Expense; re
             {e.submitter?.full_name ?? "Unknown"}
           </dd>
         </div>
+        {e.needed_by && (
+          <div>
+            <dt>Needed by</dt>
+            <dd>{formatDate(e.needed_by)}</dd>
+          </div>
+        )}
+        {e.revise_by && (
+          <div>
+            <dt>Revise by</dt>
+            <dd>{formatDate(e.revise_by)}</dd>
+          </div>
+        )}
         {e.status !== "pending" && (
           <div>
             <dt>{e.status === "approved" ? "Approved by" : "Rejected by"}</dt>

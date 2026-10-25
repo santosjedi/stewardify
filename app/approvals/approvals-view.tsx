@@ -8,6 +8,7 @@ import { getReceiptUrls } from "@/lib/receipts";
 import { weeklySeries } from "@/lib/series";
 import { createClient } from "@/lib/supabase/server";
 import { Activity, PreviousFeedback } from "../activity";
+import { DueChip } from "../due-chip";
 import { EmptyState } from "../empty-state";
 import { ExpenseDetail, initials } from "../expense-detail";
 import { ExpenseList, type ListItem } from "../expense-list";
@@ -76,6 +77,7 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
                 </span>
                 {submitter} · {formatDate(e.expense_date)} · {categoryLabel(e)}
               </span>
+              <DueChip expense={e} />
               {e.note && <span className={styles.note}>Note: {e.note}</span>}
               <PreviousFeedback expense={e} />
               <Activity expense={e} />

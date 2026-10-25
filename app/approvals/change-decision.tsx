@@ -40,6 +40,7 @@ export function ChangeDecision({ expenseId, current }: { expenseId: string; curr
   const [open, setOpen] = useState(false);
   const [choice, setChoice] = useState<Status | null>(null);
   const [comment, setComment] = useState("");
+  const [reviseBy, setReviseBy] = useState("");
   const [confirming, setConfirming] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
 
@@ -47,6 +48,7 @@ export function ChangeDecision({ expenseId, current }: { expenseId: string; curr
     setOpen(false);
     setChoice(null);
     setComment("");
+    setReviseBy("");
     setConfirming(false);
     setProblem(null);
   }
@@ -80,6 +82,7 @@ export function ChangeDecision({ expenseId, current }: { expenseId: string; curr
       <input type="hidden" name="fromStatus" value={current} />
       <input type="hidden" name="decision" value={choice ?? ""} />
       <input type="hidden" name="comment" value={comment} />
+      <input type="hidden" name="reviseBy" value={choice === "rejected" ? reviseBy : ""} />
 
       {!confirming ? (
         <>
@@ -110,6 +113,12 @@ export function ChangeDecision({ expenseId, current }: { expenseId: string; curr
             }
             className={styles.commentBox}
           />
+          {choice === "rejected" && (
+            <label className={styles.dateField}>
+              Revise by <span>(optional)</span>
+              <input type="date" value={reviseBy} onChange={(event) => setReviseBy(event.target.value)} />
+            </label>
+          )}
           {error && <p className={styles.error}>{error}</p>}
           <div className={styles.buttons}>
             <button type="button" className={styles.secondary} onClick={close}>

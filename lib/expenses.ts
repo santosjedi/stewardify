@@ -36,6 +36,8 @@ export type Expense = {
   submitted_by: string;
   review_comment: string | null;
   reviewed_at: string | null;
+  needed_by: string | null;
+  revise_by: string | null;
   created_at: string;
   submitter: { full_name: string } | null;
   reviewer: { full_name: string } | null;
@@ -57,7 +59,7 @@ export type Decision = {
 // names from profiles (through the "submitted by" and "reviewed by" links),
 // and its activity log with the name of whoever made each decision.
 export const EXPENSE_COLUMNS =
-  "id, expense_date, description, category, category_other, amount_php, note, status, receipt_path, submitted_by, review_comment, reviewed_at, created_at, " +
+  "id, expense_date, description, category, category_other, amount_php, note, status, receipt_path, submitted_by, review_comment, reviewed_at, needed_by, revise_by, created_at, " +
   "submitter:profiles!expenses_submitted_by_fkey(full_name), " +
   "reviewer:profiles!expenses_reviewed_by_fkey(full_name), " +
   "decisions:expense_decisions(id, old_status, new_status, comment, kind, created_at, " +

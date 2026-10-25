@@ -2,6 +2,7 @@
 
 import { refresh } from "next/cache";
 import { getCurrentUser } from "@/lib/auth";
+import { isValidDate } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/server";
 
 export type ReviewState = { error: string } | null;
@@ -12,9 +13,13 @@ export async function reviewExpense(_prev: ReviewState, formData: FormData): Pro
   const expenseId = String(formData.get("expenseId") ?? "");
   const decision = String(formData.get("decision") ?? "");
   const comment = String(formData.get("comment") ?? "").trim();
+  const reviseBy = String(formData.get("reviseBy") ?? "");
 
   if (decision !== "approved" && decision !== "rejected") {
     return { error: "Please choose Approve or Reject." };
+  }
+  if (decision === "rejected" && reviseBy && !isValidDate(reviseBy)) {
+    return { error: "Please choose a valid \"Revise by\" date, or leave it empty." };
   }
   if (decision === "rejected" && !comment) {
     return { error: "Please add a short comment explaining why it's rejected." };
@@ -32,7 +37,12 @@ export async function reviewExpense(_prev: ReviewState, formData: FormData): Pro
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("expenses")
-    .update({ status: decision, review_comment: comment || null })
+    .update({
+      status: decision,
+      review_comment: comment || null,
+      // Only kept for rejections (the database clears it otherwise).
+      ...(decision === "rejected" && reviseBy ? { revise_by: reviseBy } : {}),
+    })
     .eq("id", expenseId)
     .eq("status", "pending")
     .select("id");
@@ -59,7 +69,11 @@ export async function changeDecision(_prev: ReviewState, formData: FormData): Pr
   const fromStatus = String(formData.get("fromStatus") ?? "");
   const decision = String(formData.get("decision") ?? "");
   const comment = String(formData.get("comment") ?? "").trim();
+  const reviseBy = String(formData.get("reviseBy") ?? "");
 
+  if (decision === "rejected" && reviseBy && !isValidDate(reviseBy)) {
+    return { error: "Please choose a valid \"Revise by\" date, or leave it empty." };
+  }
   if (!STATUSES.includes(decision) || !STATUSES.includes(fromStatus)) {
     return { error: "Please choose a new decision." };
   }
@@ -83,7 +97,11 @@ export async function changeDecision(_prev: ReviewState, formData: FormData): Pr
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("expenses")
-    .update({ status: decision, review_comment: comment || null })
+    .update({
+      status: decision,
+      review_comment: comment || null,
+      ...(decision === "rejected" && reviseBy ? { revise_by: reviseBy } : {}),
+    })
     .eq("id", expenseId)
     .eq("status", fromStatus)
     .select("id");

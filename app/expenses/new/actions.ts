@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isValidDate } from "@/lib/dates";
 import { CATEGORIES, MAX_CATEGORY_OTHER } from "@/lib/expenses";
 
 export type SubmitResult = { error: string } | undefined;
@@ -13,6 +14,7 @@ type ExpenseFields = {
   category_other: string | null;
   amount_php: string;
   note: string | null;
+  needed_by: string | null;
   receiptPath: string;
 };
 
@@ -25,6 +27,7 @@ function readFields(formData: FormData, userId: string): { error: string } | Exp
   const categoryOther = String(formData.get("categoryOther") ?? "").trim();
   const amount = String(formData.get("amount") ?? "").trim();
   const note = String(formData.get("note") ?? "").trim();
+  const neededBy = String(formData.get("neededBy") ?? "");
   const receiptPath = String(formData.get("receiptPath") ?? "");
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(expenseDate) || isNaN(Date.parse(expenseDate))) {
@@ -55,6 +58,9 @@ function readFields(formData: FormData, userId: string): { error: string } | Exp
   if (note.length > 1000) {
     return { error: "Please keep the note under 1,000 characters." };
   }
+  if (neededBy && !isValidDate(neededBy)) {
+    return { error: "Please choose a valid \"Needed by\" date, or leave it empty." };
+  }
   if (receiptPath && !receiptPath.startsWith(`${userId}/`)) {
     return { error: "That receipt photo doesn't belong to you." };
   }
@@ -66,6 +72,7 @@ function readFields(formData: FormData, userId: string): { error: string } | Exp
     category_other: category === "Other" ? categoryOther : null,
     amount_php: amount,
     note: note || null,
+    needed_by: neededBy || null,
     receiptPath,
   };
 }
