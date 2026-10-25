@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Stewardify's browser-tab icon: the sprout-and-coin mark in white on an Evergreen square. -->
+  <rect width="64" height="64" rx="14" fill="#255c4d"/>
+  <g transform="translate(32 33) scale(0.86) translate(-32.6 -33.3)" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke="#ffffff" d="M26.4 34.4 C19.6 36.6 16.8 44 19.4 50.6 C22.2 57.4 30.8 60.4 37.6 57.6 C44.6 54.6 47.8 46.6 45 39.8 C43.8 37 41.4 35 38.2 34.2"/>
+    <path stroke="#ffffff" d="M32.2 46.4 C31.4 40.2 33.2 31 32.5 17"/>
+    <path stroke="#ffffff" d="M32 27.6 C25 28.2 19.4 23.8 18.4 16.6 C25.6 16.4 30.8 20.6 32 27.6"/>
+    <path stroke="#ffffff" d="M32.6 22 C40 22.6 46 17 47 8.6 C38.6 8.8 33.6 14 32.6 22"/>
+  </g>
+</svg>

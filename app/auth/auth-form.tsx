@@ -23,7 +23,7 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
         <section className={styles.hero} data-tilt-area>
           <Spotlight />
           <div className={styles.brand}>
-            <Logo />
+            <Logo onDark />
             <span className={styles.brandName}>Stewardify</span>
           </div>
           <h1 className={styles.headline}>

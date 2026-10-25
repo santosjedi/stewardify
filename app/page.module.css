@@ -39,14 +39,11 @@
   color: var(--foreground);
 }
 
+/* The logo mark (drawn in app/logo.tsx) */
 .logo {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: var(--gold);
-  color: var(--on-gold);
+  flex-shrink: 0;
 }
 
 .brandName {
