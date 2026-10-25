@@ -1,3 +1,24 @@
+/* ---------- Page change: fade and slide up (no transform, so fixed items stay put) ---------- */
+
+.pageEnter {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  animation: pageEnter 0.35s ease-out;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    top: 10px;
+  }
+  to {
+    opacity: 1;
+    top: 0;
+  }
+}
+
 /* ---------- Toast messages (bottom right; bottom center on phones) ---------- */
 
 .toasts {
@@ -232,6 +253,13 @@
   white-space: nowrap;
 }
 
+/* Above the bottom bar on tablets and phones */
+@media (max-width: 900px) {
+  .toasts {
+    bottom: 92px;
+  }
+}
+
 @media (max-width: 560px) {
   .toasts {
     right: 16px;
@@ -252,7 +280,8 @@
   }
 
   .badgeChanged,
-  .bone {
+  .bone,
+  .pageEnter {
     animation: none;
   }
 

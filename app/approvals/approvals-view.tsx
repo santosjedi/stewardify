@@ -5,11 +5,17 @@ import { getCurrentUser } from "@/lib/auth";
 import { categoryLabel, EXPENSE_COLUMNS, type Expense } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
+import { weeklySeries } from "@/lib/series";
 import { createClient } from "@/lib/supabase/server";
 import { Activity, PreviousFeedback } from "../activity";
-import { CountUp, StatusBadge } from "../feedback";
+import { EmptyState } from "../empty-state";
+import { ExpenseDetail, initials } from "../expense-detail";
+import { ExpenseList, type ListItem } from "../expense-list";
+import { StatusBadge } from "../feedback";
 import { Header } from "../header";
+import { categoryIcon, Icon } from "../icons";
 import { ReceiptThumbnail } from "../receipt-thumbnail";
+import { StatCard } from "../stat-card";
 import { ChangeDecision } from "./change-decision";
 import { ReviewForm } from "./review-form";
 import pageStyles from "../page.module.css";
@@ -43,27 +49,99 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
 
   const shown = view === "queue" ? pending : reviewed;
   const receiptUrls = await getReceiptUrls(supabase, shown.map((e) => e.receipt_path));
+  const approved = expenses.filter((e) => e.status === "approved");
+  const amount = (status: string) => (e: Expense) => (e.status === status ? Number(e.amount_php) : 0);
+
+  const items: ListItem[] = shown.map((e) => {
+    const receiptUrl = e.receipt_path ? receiptUrls.get(e.receipt_path) : undefined;
+    const submitter = e.submitter?.full_name ?? "Unknown";
+    return {
+      id: e.id,
+      status: e.status,
+      title: e.description,
+      searchText: [e.description, categoryLabel(e), submitter, e.note, e.amount_php, e.review_comment].join(" "),
+      className: `${styles.item} ${pageStyles[`row_${e.status}`]}`,
+      detail: <ExpenseDetail expense={e} receiptUrl={receiptUrl} />,
+      row: (
+        <>
+          <div className={styles.top}>
+            <span className={pageStyles.categoryIcon} title={categoryLabel(e)}>
+              <Icon name={categoryIcon(e.category)} />
+            </span>
+            <div className={pageStyles.details}>
+              <span className={pageStyles.description}>{e.description}</span>
+              <span className={pageStyles.meta}>
+                <span className={pageStyles.initials} title={submitter}>
+                  {initials(submitter)}
+                </span>
+                {submitter} · {formatDate(e.expense_date)} · {categoryLabel(e)}
+              </span>
+              {e.note && <span className={styles.note}>Note: {e.note}</span>}
+              <PreviousFeedback expense={e} />
+              <Activity expense={e} />
+            </div>
+            {receiptUrl && <ReceiptThumbnail url={receiptUrl} description={e.description} />}
+            <div className={pageStyles.right}>
+              <span className={pageStyles.amount}>{pesos.format(Number(e.amount_php))}</span>
+              {view === "history" && (
+                <StatusBadge status={e.status} className={`${pageStyles.badge} ${pageStyles[e.status]}`} />
+              )}
+            </div>
+          </div>
+
+          {view === "queue" &&
+            (e.submitted_by === user.id ? (
+              <p className={styles.ownNotice}>
+                This is your own expense, so another approver needs to review it.
+              </p>
+            ) : (
+              <ReviewForm expenseId={e.id} />
+            ))}
+
+          {view === "history" && (
+            <div className={styles.reviewLine}>
+              <p>
+                {e.status === "approved" ? "Approved" : "Rejected"} by{" "}
+                {e.reviewer?.full_name ?? "an approver"}
+                {e.reviewed_at && ` · ${formatDateTime(e.reviewed_at)}`}
+                {e.review_comment && (
+                  <span className={pageStyles.comment}> — “{e.review_comment}”</span>
+                )}
+              </p>
+              {e.submitted_by !== user.id && (
+                <ChangeDecision key={`${e.id}-${e.status}`} expenseId={e.id} current={e.status} />
+              )}
+            </div>
+          )}
+        </>
+      ),
+    };
+  });
 
   return (
     <>
-      <Header user={user} active="approvals" />
+      <Header user={user} active={view === "queue" ? "approvals" : "history"} />
       <div className={pageStyles.toolbar}>
-        <h2 className={pageStyles.heading}>Approval queue</h2>
+        <h2 className={pageStyles.heading}>{view === "queue" ? "Approval queue" : "History"}</h2>
       </div>
 
       <section className={styles.summary}>
-        <div className={`${pageStyles.card} ${pageStyles.cardPending}`}>
-          <span className={pageStyles.cardLabel}>Total pending</span>
-          <span className={pageStyles.cardValue}>
-            <CountUp value={sum(pending)} format="pesos" />
-          </span>
-        </div>
-        <div className={`${pageStyles.card} ${pageStyles.cardApproved}`}>
-          <span className={pageStyles.cardLabel}>Total approved</span>
-          <span className={pageStyles.cardValue}>
-            <CountUp value={sum(expenses.filter((e) => e.status === "approved"))} format="pesos" />
-          </span>
-        </div>
+        <StatCard
+          label="Total pending"
+          value={sum(pending)}
+          format="pesos"
+          tone="pending"
+          icon="hourglass"
+          series={weeklySeries(expenses, amount("pending"))}
+        />
+        <StatCard
+          label="Total approved"
+          value={sum(approved)}
+          format="pesos"
+          tone="approved"
+          icon="check"
+          series={weeklySeries(expenses, amount("approved"))}
+        />
       </section>
 
       <nav className={styles.tabs}>
@@ -78,63 +156,21 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
         </Link>
       </nav>
 
-      {shown.length === 0 ? (
-        <p className={pageStyles.message}>
-          {view === "queue" ? "Nothing waiting for review. 🎉" : "No reviewed expenses yet."}
-        </p>
-      ) : (
-        <ul className={styles.list}>
-          {shown.map((e) => (
-            <li key={e.id} className={styles.item}>
-              <div className={styles.top}>
-                {e.receipt_path && receiptUrls.has(e.receipt_path) && (
-                  <ReceiptThumbnail url={receiptUrls.get(e.receipt_path)!} description={e.description} />
-                )}
-                <div className={pageStyles.details}>
-                  <span className={pageStyles.description}>{e.description}</span>
-                  <span className={pageStyles.meta}>
-                    {e.submitter?.full_name ?? "Unknown"} · {formatDate(e.expense_date)} · {categoryLabel(e)}
-                  </span>
-                  {e.note && <span className={styles.note}>Note: {e.note}</span>}
-                  <PreviousFeedback expense={e} />
-                  <Activity expense={e} />
-                </div>
-                <div className={pageStyles.right}>
-                  <span className={pageStyles.amount}>{pesos.format(Number(e.amount_php))}</span>
-                  {view === "history" && (
-                    <StatusBadge status={e.status} className={`${pageStyles.badge} ${pageStyles[e.status]}`} />
-                  )}
-                </div>
-              </div>
-
-              {view === "queue" &&
-                (e.submitted_by === user.id ? (
-                  <p className={styles.ownNotice}>
-                    This is your own expense, so another approver needs to review it.
-                  </p>
-                ) : (
-                  <ReviewForm expenseId={e.id} />
-                ))}
-
-              {view === "history" && (
-                <div className={styles.reviewLine}>
-                  <p>
-                    {e.status === "approved" ? "Approved" : "Rejected"} by{" "}
-                    {e.reviewer?.full_name ?? "an approver"}
-                    {e.reviewed_at && ` · ${formatDateTime(e.reviewed_at)}`}
-                    {e.review_comment && (
-                      <span className={pageStyles.comment}> — “{e.review_comment}”</span>
-                    )}
-                  </p>
-                  {e.submitted_by !== user.id && (
-                    <ChangeDecision key={`${e.id}-${e.status}`} expenseId={e.id} current={e.status} />
-                  )}
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+      <ExpenseList
+        items={items}
+        chips={view === "history" ? ["approved", "rejected"] : []}
+        listClassName={styles.list}
+        empty={
+          view === "queue" ? (
+            <EmptyState title="All caught up! 🎉" text="Nothing is waiting for review right now." />
+          ) : (
+            <EmptyState
+              title="No decisions yet"
+              text="Approved and rejected expenses will appear here, with their activity."
+            />
+          )
+        }
+      />
     </>
   );
 }

@@ -1,4 +1,4 @@
-/* The landing page: hero + form at the top, then "How it works" and features. */
+/* The landing page: hero + form at the top, then the story scenes (see story.tsx). */
 .page {
   flex: 1;
   width: 100%;
@@ -317,7 +317,7 @@
 .section {
   position: relative;
   isolation: isolate;
-  margin-top: 64px;
+  margin-top: 96px;
 }
 
 .sectionLead {
@@ -328,7 +328,7 @@
 
 .sectionTitle {
   margin-bottom: 24px;
-  font-size: 30px;
+  font-size: 40px;
   text-align: center;
 }
 
@@ -344,160 +344,6 @@
   transform: none;
 }
 
-/* ---------- How it works ---------- */
-
-.steps {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  list-style: none;
-}
-
-/* The line connecting the steps; it draws itself in when the section appears */
-.steps::before {
-  content: "";
-  position: absolute;
-  top: 44px;
-  left: 16%;
-  right: 16%;
-  height: 2px;
-  background: var(--blue);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 1.2s ease-out 0.3s;
-}
-
-.revealed .steps::before {
-  transform: scaleX(1);
-}
-
-.step {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 24px 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  text-align: center;
-  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
-}
-
-.step:hover {
-  transform: translateY(-6px);
-  border-color: var(--blue);
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
-}
-
-.stepNumber {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--band);
-  color: var(--band-text);
-  font-family: var(--font-heading-family);
-  font-size: 18px;
-  font-weight: 600;
-  transition: background 0.25s, color 0.25s;
-}
-
-.step:hover .stepNumber {
-  background: var(--gold);
-  color: var(--on-gold);
-}
-
-.stepTitle {
-  font-size: 20px;
-}
-
-.stepText {
-  font-size: 14px;
-  color: var(--muted);
-}
-
-/* ---------- Feature cards ---------- */
-
-.features {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-/* The border is drawn as a background, so it can become a moving gradient on hover */
-.feature {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 22px 20px;
-  border: 2px solid transparent;
-  border-radius: var(--radius-lg);
-  background:
-    linear-gradient(var(--surface), var(--surface)) padding-box,
-    linear-gradient(var(--border), var(--border)) border-box;
-  transition: transform 0.25s, box-shadow 0.25s;
-}
-
-/* Lift with a soft blue glow, and a gradient border that flows around */
-.feature:hover {
-  transform: translateY(-6px);
-  background:
-    linear-gradient(var(--surface), var(--surface)) padding-box,
-    linear-gradient(110deg, var(--blue), var(--gold), var(--orange), var(--blue)) border-box;
-  background-size: 100% 100%, 300% 100%;
-  box-shadow: 0 12px 32px rgba(36, 131, 197, 0.18);
-  animation: borderFlow 3s linear infinite;
-}
-
-@keyframes borderFlow {
-  from {
-    background-position: 0 0, 0% 0;
-  }
-  to {
-    background-position: 0 0, 300% 0;
-  }
-}
-
-.featureIcon {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: var(--surface-muted);
-  color: var(--blue);
-}
-
-.feature:hover .featureIcon {
-  animation: bounce 0.6s ease;
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  35% {
-    transform: translateY(-6px);
-  }
-  65% {
-    transform: translateY(-2px);
-  }
-}
-
-.featureTitle {
-  font-size: 18px;
-}
-
-.featureText {
-  font-size: 14px;
-  color: var(--muted);
-}
-
 .footer {
   margin-top: 56px;
   padding-top: 20px;
@@ -507,13 +353,7 @@
   text-align: center;
 }
 
-/* ---------- Tablets and phones ---------- */
-
-@media (max-width: 860px) {
-  .features {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+/* ---------- Phones ---------- */
 
 @media (max-width: 760px) {
   .page {
@@ -539,75 +379,24 @@
   }
 
   .section {
-    margin-top: 48px;
+    margin-top: 64px;
   }
 
   .sectionTitle {
-    font-size: 26px;
-  }
-
-  /* Steps stack, and the line runs down the left side instead */
-  .steps {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .steps::before {
-    top: 24px;
-    bottom: 24px;
-    left: 40px;
-    right: auto;
-    width: 2px;
-    height: auto;
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-
-  .revealed .steps::before {
-    transform: scaleY(1);
-  }
-
-  .step {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    column-gap: 14px;
-    text-align: left;
-  }
-
-  .stepText {
-    flex-basis: 100%;
-    padding-left: 54px;
-  }
-
-  /* Smaller lift on touch screens */
-  .step:hover,
-  .feature:hover {
-    transform: translateY(-3px);
+    font-size: 30px;
   }
 }
 
-@media (max-width: 480px) {
-  .features {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ---------- Reduced motion: no floating, tilting, sliding, or bouncing ---------- */
+/* ---------- Reduced motion: no floating, tilting, or sliding ---------- */
 
 @media (prefers-reduced-motion: reduce) {
   .mockFloat,
-  .mockBadge,
-  .feature:hover,
-  .feature:hover .featureIcon {
+  .mockBadge {
     animation: none;
   }
 
   .mock,
   .reveal,
-  .steps::before,
-  .step,
-  .feature,
   .button {
     transition: none;
   }
@@ -617,13 +406,6 @@
     transform: none;
   }
 
-  .steps::before,
-  .revealed .steps::before {
-    transform: none;
-  }
-
-  .step:hover,
-  .feature:hover,
   .button:hover:not(:disabled) {
     transform: none;
   }

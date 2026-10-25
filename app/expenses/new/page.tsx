@@ -26,7 +26,7 @@ async function NewExpense() {
 
   return (
     <>
-      <Header user={user} active="expenses" />
+      <Header user={user} active="submit" />
       <h1 className={styles.title}>Submit expense</h1>
       <ExpenseForm userId={user.id} today={today} />
     </>

@@ -10,7 +10,7 @@ const LABELS: Record<Status, string> = {
 
 // A small, fold-out timeline of every decision on an expense, oldest first.
 // Shown only once someone has made a decision.
-export function Activity({ expense }: { expense: Expense }) {
+export function Activity({ expense, open = false }: { expense: Expense; open?: boolean }) {
   const decisions = [...(expense.decisions ?? [])].sort((a, b) =>
     a.created_at.localeCompare(b.created_at)
   );
@@ -19,7 +19,7 @@ export function Activity({ expense }: { expense: Expense }) {
   }
 
   return (
-    <details className={styles.activity}>
+    <details className={styles.activity} open={open}>
       <summary className={styles.activitySummary}>Activity ({decisions.length + 1})</summary>
       <ol className={styles.timeline}>
         <li className={styles.event}>

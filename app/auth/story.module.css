@@ -1,0 +1,813 @@
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Full-width sections break out of the page's centered column */
+.quote {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+/* A scene is one "chapter" of the scrolling story */
+.scene {
+  position: relative;
+  margin-top: 96px;
+}
+
+.sceneTitle {
+  margin-bottom: 32px;
+  font-size: 40px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+/* ---------- 6. Headlines revealed word by word ---------- */
+
+.word {
+  display: inline-block;
+  margin-right: 0.25em;
+  opacity: 0;
+  transform: translateY(0.45em);
+  transition:
+    opacity 0.5s ease-out calc(var(--i) * 90ms),
+    transform 0.5s ease-out calc(var(--i) * 90ms);
+}
+
+.word:last-child {
+  margin-right: 0;
+}
+
+.wordsIn .word {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Logo strip and trust badges ---------- */
+
+.logoSection {
+  margin-top: 80px;
+  text-align: center;
+}
+
+.logoStrip {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.logoTrack {
+  display: flex;
+  width: max-content;
+  animation: logoScroll 36s linear infinite;
+}
+
+/* Pause while the mouse is over the strip, so a logo can be looked at */
+.logoStrip:hover .logoTrack {
+  animation-play-state: paused;
+}
+
+@keyframes logoScroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Muted by default; full color on hover */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 36px;
+  color: var(--placeholder);
+  white-space: nowrap;
+  transition: color 0.25s;
+}
+
+.logoMark {
+  flex-shrink: 0;
+  transition: color 0.25s, transform 0.25s;
+}
+
+.logoName {
+  font-family: var(--font-heading-family);
+  font-size: 20px;
+  font-weight: 600;
+  font-variation-settings: "SOFT" 100;
+}
+
+.logo:hover {
+  color: var(--foreground);
+}
+
+.logo:hover .logoMark {
+  color: var(--brand);
+  transform: scale(1.1);
+}
+
+.logoCaption {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+  list-style: none;
+}
+
+.trustBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.trustBadge svg {
+  color: var(--blue);
+}
+
+/* ---------- 2. Pinned story scene ---------- */
+
+/* Tall, so the inside stays pinned while you scroll through it */
+.story {
+  position: relative;
+  height: 300vh;
+  margin-top: 40px;
+}
+
+.storySticky {
+  --p: 0;
+  position: sticky;
+  top: 0;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  gap: 40px;
+  height: 100vh;
+}
+
+.storyTexts {
+  display: grid;
+}
+
+/* The three texts sit on top of each other; only the current one shows */
+.storyStep {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.45s, transform 0.45s;
+}
+
+.storyStepOn {
+  opacity: 1;
+  transform: none;
+}
+
+.storyTitle {
+  margin-bottom: 12px;
+  font-size: 36px;
+}
+
+.storyBody {
+  font-size: 17px;
+  color: var(--muted);
+}
+
+.storyTrack {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.storyStations {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.station {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color 0.3s;
+}
+
+.stationOn {
+  color: var(--foreground);
+}
+
+.stationDot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.stationOn .stationDot {
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+.storyLine {
+  height: 4px;
+  margin-bottom: 28px;
+  border-radius: 999px;
+  background: var(--surface-muted);
+  overflow: hidden;
+}
+
+.storyLineFill {
+  display: block;
+  height: 100%;
+  background: var(--blue);
+  transform: scaleX(var(--p));
+  transform-origin: left;
+}
+
+/* The card travels from left to right as you scroll */
+.travel {
+  position: relative;
+  height: 130px;
+}
+
+.storyCard {
+  position: absolute;
+  top: 0;
+  left: calc(var(--p) * (100% - 260px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 260px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+}
+
+.storyCardTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.storyThumb {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: repeating-linear-gradient(180deg, var(--surface-muted) 0 5px, var(--surface) 5px 9px);
+}
+
+.storyCardText {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+.storyCardText small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.storyBadge {
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  animation: badgeSwap 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes badgeSwap {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pending {
+  background: var(--pending-bg);
+  color: var(--pending-text);
+}
+
+.review {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.approved {
+  background: var(--approved-bg);
+  color: var(--approved-text);
+}
+
+/* Reduced motion: the stages as a simple list */
+.storyStatic {
+  margin-top: 96px;
+}
+
+.storyStaticItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.storyStaticItem p {
+  color: var(--muted);
+}
+
+/* ---------- 3. Two sides ---------- */
+
+.sides {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px 28px;
+  border-radius: var(--radius-lg);
+  opacity: 0;
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.fromLeft {
+  transform: translateX(-60px);
+}
+
+.fromRight {
+  transform: translateX(60px);
+  transition-delay: 0.12s;
+}
+
+.sidesIn .side {
+  opacity: 1;
+  transform: none;
+}
+
+.sideLight {
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.sideDark {
+  background: var(--band);
+  color: var(--band-text);
+}
+
+.sideWho {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sideLight .sideWho {
+  color: var(--primary);
+}
+
+.sideDark .sideWho {
+  color: var(--band-accent);
+}
+
+.sideTitle {
+  font-size: 26px;
+}
+
+.sidePoints {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+  list-style: none;
+}
+
+.sidePoints li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidePoints li::before {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--on-gold);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* ---------- 5. Stacked card deck ---------- */
+
+/* Each card sticks a little lower than the one before, so they pile up */
+.deck {
+  list-style: none;
+}
+
+.deckCard {
+  position: sticky;
+  top: calc(96px + var(--i) * 22px);
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  min-height: 180px;
+  margin-bottom: 28vh;
+  padding: 32px 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 -8px 30px rgba(15, 23, 42, 0.08);
+}
+
+.deckCard:last-child {
+  margin-bottom: 0;
+}
+
+.deckNumber {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--band);
+  color: var(--band-accent);
+  font-family: var(--font-heading-family);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.deckTitle {
+  margin-bottom: 8px;
+  font-size: 28px;
+}
+
+.deckText {
+  font-size: 16px;
+  color: var(--muted);
+}
+
+/* ---------- 4. Horizontal feature strip ---------- */
+
+.strip {
+  position: relative;
+  margin-top: 96px;
+}
+
+/* On computers: pinned while the cards slide sideways */
+.stripPinned {
+  margin-top: 64px;
+}
+
+.stripPinned .stripSticky {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* On phones: a normal row you can swipe */
+.stripWindow {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 2px 16px;
+}
+
+.stripPinned .stripWindow {
+  overflow: visible;
+}
+
+.stripTrack {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  will-change: transform;
+}
+
+.stripCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 280px;
+  padding: 26px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  scroll-snap-align: start;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.stripCard:hover {
+  transform: translateY(-6px);
+  border-color: var(--blue);
+  box-shadow: 0 12px 32px rgba(36, 131, 197, 0.18);
+}
+
+.stripIcon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--surface-muted);
+  color: var(--blue);
+}
+
+.stripTitle {
+  font-size: 20px;
+}
+
+.stripText {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ---------- 7. Full-width quote with slow zoom ---------- */
+
+.quote {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 70vh;
+  margin-top: 96px;
+  padding: 80px 24px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* A drawn navy-and-gold "photo" (a real photo can replace this later) */
+.quoteBackground {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(252, 199, 21, 0.35), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(36, 131, 197, 0.45), transparent 45%),
+    radial-gradient(circle at 60% 20%, rgba(244, 146, 61, 0.25), transparent 35%),
+    linear-gradient(160deg, #1e4e79, #16303d 60%, #0f1f28);
+  animation: slowZoom 24s ease-in-out infinite alternate;
+}
+
+@keyframes slowZoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.15);
+  }
+}
+
+.quoteInner {
+  max-width: 760px;
+  text-align: center;
+}
+
+.quoteText {
+  font-family: var(--font-heading-family);
+  font-size: 42px;
+  font-weight: 600;
+  font-variation-settings: "SOFT" 100;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.quoteSource {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--band-accent);
+}
+
+/* ---------- Final call to action (navy band) ---------- */
+
+.cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-top: 80px;
+  padding: 56px 24px;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 85% 0%, rgba(252, 199, 21, 0.2), transparent 40%),
+    radial-gradient(circle at 10% 100%, rgba(36, 131, 197, 0.35), transparent 45%),
+    var(--band);
+  color: var(--band-text);
+  text-align: center;
+}
+
+/* The magnetic button sits centered here (it lines up left in the hero) */
+.cta > a {
+  align-self: center;
+}
+
+.ctaTitle {
+  max-width: 620px;
+  font-size: 40px;
+}
+
+.ctaText {
+  max-width: 480px;
+  margin-top: -12px;
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 760px) {
+  .scene,
+  .strip,
+  .storyStatic,
+  .quote {
+    margin-top: 64px;
+  }
+
+  .sceneTitle {
+    font-size: 30px;
+  }
+
+  .logo {
+    padding: 8px 24px;
+  }
+
+  .logoName {
+    font-size: 17px;
+  }
+
+  .story {
+    height: 260vh;
+  }
+
+  .storySticky {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 20px;
+  }
+
+  .storyTitle {
+    font-size: 26px;
+  }
+
+  .storyBody {
+    font-size: 15px;
+  }
+
+  .storyTrack {
+    padding: 18px;
+  }
+
+  .station {
+    font-size: 11px;
+  }
+
+  .storyCard {
+    left: calc(var(--p) * (100% - 220px));
+    width: 220px;
+  }
+
+  .sides {
+    grid-template-columns: 1fr;
+  }
+
+  .deckCard {
+    top: calc(72px + var(--i) * 14px);
+    min-height: 150px;
+    margin-bottom: 20vh;
+    padding: 24px 20px;
+  }
+
+  .deckTitle {
+    font-size: 22px;
+  }
+
+  .stripCard {
+    width: 240px;
+  }
+
+  .quoteText {
+    font-size: 28px;
+  }
+
+  .cta {
+    margin-top: 64px;
+    padding: 40px 20px;
+  }
+
+  .ctaTitle {
+    font-size: 30px;
+  }
+
+  .ctaText {
+    font-size: 15px;
+  }
+}
+
+/* ---------- Reduced motion: no scrolling logos, sliding, stacking, or zoom ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .logoTrack {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: auto;
+    animation: none;
+  }
+
+  .logoTrack > :nth-child(n + 6) {
+    display: none;
+  }
+
+  .logo,
+  .logoMark {
+    transition: none;
+  }
+
+  .logo:hover .logoMark {
+    transform: none;
+  }
+
+  .word,
+  .side,
+  .storyStep {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .deckCard {
+    position: static;
+    margin-bottom: 16px;
+  }
+
+  .stripCard,
+  .storyBadge {
+    transition: none;
+    animation: none;
+  }
+
+  .stripCard:hover {
+    transform: none;
+  }
+
+  .quoteBackground {
+    animation: none;
+  }
+}

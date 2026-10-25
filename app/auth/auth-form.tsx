@@ -5,8 +5,9 @@ import { useActionState } from "react";
 import { Spinner } from "../feedback";
 import { Logo } from "../logo";
 import { signIn, signUp } from "./actions";
-import { Compare, ExpenseMockup, Features, HowItWorks, Reveal, TryIt } from "./landing";
+import { Compare, ExpenseMockup, Reveal, TryIt } from "./landing";
 import { MagneticButton, ScrollEffects, Spotlight, Typewriter } from "./landing-extras";
+import { FeatureStrip, FinalCta, LogoStrip, QuoteScene, StackedSteps, StoryScene, TwoSides } from "./story";
 import styles from "./auth.module.css";
 
 // The sign-in and sign-up page (also the landing page): a welcome panel next to
@@ -93,10 +94,15 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
         </form>
       </Reveal>
 
-      <HowItWorks />
+      <StoryScene />
+      <TwoSides />
+      <StackedSteps />
       <TryIt />
+      <FeatureStrip />
       <Compare />
-      <Features />
+      <QuoteScene />
+      <LogoStrip />
+      <FinalCta />
 
       <footer className={styles.footer}>Stewardify · Simple expense tracking for ministries</footer>
     </main>

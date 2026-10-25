@@ -55,6 +55,11 @@
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
+/* The details button sits at the bottom right of each card */
+.item > button:last-child {
+  align-self: flex-end;
+}
+
 /* Lifts slightly on hover */
 .item:hover {
   transform: translateY(-2px);
