@@ -16,6 +16,7 @@ import { ExpenseList, type ListItem } from "../expense-list";
 import { StatusBadge } from "../feedback";
 import { Header } from "../header";
 import { categoryIcon, Icon } from "../icons";
+import { DetailsLine, detailsSearchText, DuplicateBadge, duplicateIds } from "../receipt-details";
 import { ReceiptThumbnail } from "../receipt-thumbnail";
 import { StatCard } from "../stat-card";
 import { ChangeDecision } from "./change-decision";
@@ -72,6 +73,8 @@ export async function ApprovalsView({ view }: { view: "queue" | "reimburse" | "h
   }
   const owedList = [...owed.values()].sort((a, b) => b.total - a.total);
 
+  const duplicates = duplicateIds(expenses);
+
   const items: ListItem[] = shown.map((e) => {
     const receiptUrl = e.receipt_path ? receiptUrls.get(e.receipt_path) : undefined;
     const submitter = e.submitter?.full_name ?? "Unknown";
@@ -79,7 +82,7 @@ export async function ApprovalsView({ view }: { view: "queue" | "reimburse" | "h
       id: e.id,
       status: e.status,
       title: e.description,
-      searchText: [e.description, categoryLabel(e), submitter, e.note, e.amount_php, e.review_comment].join(" "),
+      searchText: [e.description, categoryLabel(e), submitter, e.note, e.amount_php, e.review_comment, detailsSearchText(e)].join(" "),
       className: `${styles.item} ${pageStyles[`row_${e.status}`]}`,
       detail: <ExpenseDetail expense={e} receiptUrl={receiptUrl} />,
       row: (
@@ -97,6 +100,8 @@ export async function ApprovalsView({ view }: { view: "queue" | "reimburse" | "h
                 {submitter} · {formatDate(e.expense_date)} · {categoryLabel(e)}
               </span>
               <DueChip expense={e} />
+              {duplicates.has(e.id) && <DuplicateBadge />}
+              <DetailsLine expense={e} />
               {e.note && <span className={styles.note}>Note: {e.note}</span>}
               <PreviousFeedback expense={e} />
               <Activity expense={e} />

@@ -21,6 +21,30 @@ export const MAX_CATEGORY_OTHER = 100;
 // How the ministry paid the submitter back ("Reimbursed via").
 export const REIMBURSE_METHODS = ["Cash", "GCash", "Maya", "Bank transfer", "Check"] as const;
 
+// How the submitter paid the store ("Paid vendor via"). A different field from the one above.
+export const PAID_VENDOR_METHODS = ["Cash", "GCash", "Maya", "Bank transfer", "Card", "Check", "Other"] as const;
+
+// "Paid vendor via" methods that come with a reference / transaction number.
+export const METHODS_WITH_REFERENCE = ["GCash", "Maya", "Bank transfer", "Card"];
+
+// Limits for the optional receipt details (the database checks the same ones).
+export const DETAIL_LIMITS = {
+  or_number: 50,
+  vendor_name: 120,
+  payment_ref: 100,
+  vendor_tin: 20,
+  project: 100,
+  attendees: 500,
+};
+
+// Two expenses with the same OR / Invoice number and vendor may be the same receipt.
+// Capital letters and extra spaces don't count. Empty when either is missing.
+export function duplicateKey(e: { or_number: string | null; vendor_name: string | null }) {
+  const or = e.or_number?.trim().toLowerCase();
+  const vendor = e.vendor_name?.trim().toLowerCase();
+  return or && vendor ? `${or}|${vendor}` : "";
+}
+
 export const RECEIPT_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const MAX_RECEIPT_BYTES = 5 * 1024 * 1024; // 5 MB
 
@@ -46,6 +70,13 @@ export type Expense = {
   reviewed_at: string | null;
   needed_by: string | null;
   revise_by: string | null;
+  or_number: string | null;
+  vendor_name: string | null;
+  paid_vendor_via: string | null;
+  payment_ref: string | null;
+  vendor_tin: string | null;
+  project: string | null;
+  attendees: string | null;
   reimbursed_via: string | null;
   reimbursed_on: string | null;
   reimbursement_ref: string | null;
@@ -75,6 +106,7 @@ export type Decision = {
 // and its activity log with the name of whoever made each decision.
 export const EXPENSE_COLUMNS =
   "id, expense_date, description, category, category_other, amount_php, note, status, receipt_path, submitted_by, review_comment, reviewed_at, needed_by, revise_by, " +
+  "or_number, vendor_name, paid_vendor_via, payment_ref, vendor_tin, project, attendees, " +
   "reimbursed_via, reimbursed_on, reimbursement_ref, reimbursement_note, reimbursed_at, created_at, " +
   "submitter:profiles!expenses_submitted_by_fkey(full_name), " +
   "reviewer:profiles!expenses_reviewed_by_fkey(full_name), " +

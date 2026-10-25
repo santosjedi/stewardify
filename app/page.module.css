@@ -633,6 +633,30 @@
   color: var(--rejected-text);
 }
 
+/* "Possible duplicate" (approvers only) */
+.duplicate {
+  width: fit-content;
+  margin-top: 2px;
+  padding: 2px 10px;
+  border: 1px dashed var(--pending-text);
+  border-radius: 999px;
+  background: var(--pending-bg);
+  color: var(--pending-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Receipt details line in the approval queue */
+.detailsLine {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.detailAttendees {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
 /* The category's icon in a soft circle */
 .categoryIcon {
   display: grid;

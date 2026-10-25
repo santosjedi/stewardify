@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
+import { projectSuggestions } from "@/lib/projects";
+import { createClient } from "@/lib/supabase/server";
 import { Header } from "../../header";
 import { ExpenseForm } from "./expense-form";
 import { PageSkeleton } from "../../skeleton";
@@ -23,12 +25,13 @@ async function NewExpense() {
 
   // Today in the Philippines, as YYYY-MM-DD, to fill in the date field.
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Manila" }).format(new Date());
+  const projects = await projectSuggestions(await createClient());
 
   return (
     <>
       <Header user={user} active="submit" />
       <h1 className={styles.title}>Submit expense</h1>
-      <ExpenseForm userId={user.id} today={today} />
+      <ExpenseForm userId={user.id} today={today} projects={projects} />
     </>
   );
 }

@@ -153,6 +153,34 @@
   object-fit: cover;
 }
 
+/* "Receipt details (all optional)" */
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+}
+
+.detailsTitle {
+  padding: 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.warning {
+  padding: 10px 14px;
+  border-left: 4px solid #d99a00;
+  border-radius: 10px;
+  background: var(--pending-bg);
+  color: var(--pending-text);
+  font-size: 14px;
+}
+
 .optional {
   font-weight: 400;
   color: var(--muted);
@@ -227,6 +255,10 @@
 @media (max-width: 560px) {
   .form {
     padding: 20px 16px;
+  }
+
+  .details {
+    padding: 14px 12px;
   }
 
   .row {

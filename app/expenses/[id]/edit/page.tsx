@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { EXPENSE_COLUMNS, type Expense } from "@/lib/expenses";
+import { projectSuggestions } from "@/lib/projects";
 import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
 import { Header } from "../../../header";
@@ -46,7 +47,10 @@ async function EditExpense({ params }: { params: Promise<{ id: string }> }) {
     );
   }
 
-  const receiptUrls = await getReceiptUrls(supabase, [expense.receipt_path]);
+  const [receiptUrls, projects] = await Promise.all([
+    getReceiptUrls(supabase, [expense.receipt_path]),
+    projectSuggestions(supabase),
+  ]);
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Manila" }).format(new Date());
 
   return (
@@ -64,6 +68,7 @@ async function EditExpense({ params }: { params: Promise<{ id: string }> }) {
       <ExpenseForm
         userId={user.id}
         today={today}
+        projects={projects}
         existing={{
           id: expense.id,
           expense_date: expense.expense_date,
@@ -73,6 +78,13 @@ async function EditExpense({ params }: { params: Promise<{ id: string }> }) {
           amount_php: expense.amount_php,
           note: expense.note,
           needed_by: expense.needed_by,
+          or_number: expense.or_number,
+          vendor_name: expense.vendor_name,
+          paid_vendor_via: expense.paid_vendor_via,
+          payment_ref: expense.payment_ref,
+          vendor_tin: expense.vendor_tin,
+          project: expense.project,
+          attendees: expense.attendees,
           receiptUrl: expense.receipt_path ? (receiptUrls.get(expense.receipt_path) ?? null) : null,
         }}
       />

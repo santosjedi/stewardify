@@ -94,6 +94,54 @@ export function ExpenseDetail({ expense: e, receiptUrl }: { expense: Expense; re
         )}
       </dl>
 
+      {(e.or_number || e.vendor_name || e.paid_vendor_via || e.vendor_tin || e.project || e.attendees) && (
+        <div className={styles.detailBlock}>
+          <h3>Receipt details</h3>
+          <dl className={styles.detailFacts}>
+            {e.or_number && (
+              <div>
+                <dt>OR / Invoice number</dt>
+                <dd>{e.or_number}</dd>
+              </div>
+            )}
+            {e.vendor_name && (
+              <div>
+                <dt>Vendor / Merchant</dt>
+                <dd>{e.vendor_name}</dd>
+              </div>
+            )}
+            {e.paid_vendor_via && (
+              <div>
+                <dt>Paid vendor via</dt>
+                <dd>{e.paid_vendor_via}</dd>
+              </div>
+            )}
+            {e.payment_ref && (
+              <div>
+                <dt>Reference / Transaction no.</dt>
+                <dd>{e.payment_ref}</dd>
+              </div>
+            )}
+            {e.vendor_tin && (
+              <div>
+                <dt>Vendor TIN</dt>
+                <dd>{e.vendor_tin}</dd>
+              </div>
+            )}
+            {e.project && (
+              <div>
+                <dt>Project / Program</dt>
+                <dd>{e.project}</dd>
+              </div>
+            )}
+          </dl>
+          {e.attendees && (
+            <p className={styles.detailAttendees}>
+              <strong>Attendees:</strong> {e.attendees}
+            </p>
+          )}
+        </div>
+      )}
       {e.note && (
         <div className={styles.detailBlock}>
           <h3>Note</h3>

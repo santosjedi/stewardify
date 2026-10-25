@@ -17,6 +17,7 @@ import { ExpenseList, type ListItem } from "./expense-list";
 import { ShowQueuedToast, StatusBadge } from "./feedback";
 import { Header } from "./header";
 import { categoryIcon, Icon } from "./icons";
+import { detailsSearchText, DuplicateBadge, duplicateIds } from "./receipt-details";
 import { ReceiptThumbnail } from "./receipt-thumbnail";
 import { StatCard } from "./stat-card";
 import { VerseCard } from "./verse-card";
@@ -105,6 +106,9 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
   );
   const sum = (list: Expense[]) => list.reduce((total, e) => total + Number(e.amount_php), 0);
 
+  // Approvers see everyone's expenses, so they can be told about possible duplicates.
+  const duplicates = showSubmitter ? duplicateIds(expenses) : new Set<string>();
+
   const items: ListItem[] = expenses.map((e) => {
     const receiptUrl = e.receipt_path ? receiptUrls.get(e.receipt_path) : undefined;
     const submitter = e.submitter?.full_name ?? "Unknown";
@@ -112,7 +116,7 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
       id: e.id,
       status: e.status,
       title: e.description,
-      searchText: [e.description, categoryLabel(e), submitter, e.note, e.amount_php].join(" "),
+      searchText: [e.description, categoryLabel(e), submitter, e.note, e.amount_php, detailsSearchText(e)].join(" "),
       className: `${styles.row} ${styles[`row_${e.status}`]}`,
       detail: <ExpenseDetail expense={e} receiptUrl={receiptUrl} />,
       row: (
@@ -130,6 +134,7 @@ async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; use
               {formatDate(e.expense_date)} · {categoryLabel(e)}
             </span>
             <DueChip expense={e} />
+            {duplicates.has(e.id) && <DuplicateBadge />}
             {e.status !== "pending" && (
               <span className={styles.review}>
                 {e.status === "rejected" ? "Rejected" : "Approved"} by{" "}

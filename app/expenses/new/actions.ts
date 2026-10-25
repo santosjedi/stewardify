@@ -3,7 +3,13 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isValidDate } from "@/lib/dates";
-import { CATEGORIES, MAX_CATEGORY_OTHER } from "@/lib/expenses";
+import {
+  CATEGORIES,
+  DETAIL_LIMITS,
+  MAX_CATEGORY_OTHER,
+  METHODS_WITH_REFERENCE,
+  PAID_VENDOR_METHODS,
+} from "@/lib/expenses";
 
 export type SubmitResult = { error: string } | undefined;
 
@@ -15,7 +21,23 @@ type ExpenseFields = {
   amount_php: string;
   note: string | null;
   needed_by: string | null;
+  or_number: string | null;
+  vendor_name: string | null;
+  paid_vendor_via: string | null;
+  payment_ref: string | null;
+  vendor_tin: string | null;
+  project: string | null;
+  attendees: string | null;
   receiptPath: string;
+};
+
+const DETAIL_LABELS: Record<keyof typeof DETAIL_LIMITS, string> = {
+  or_number: "OR / Invoice number",
+  vendor_name: "vendor name",
+  payment_ref: "reference number",
+  vendor_tin: "vendor TIN",
+  project: "project / program",
+  attendees: "attendees",
 };
 
 // Reads and checks the form's fields. Used for both new and resubmitted expenses,
@@ -61,6 +83,32 @@ function readFields(formData: FormData, userId: string): { error: string } | Exp
   if (neededBy && !isValidDate(neededBy)) {
     return { error: "Please choose a valid \"Needed by\" date, or leave it empty." };
   }
+
+  // Optional receipt details.
+  const detail = (name: keyof typeof DETAIL_LIMITS) => String(formData.get(name) ?? "").trim();
+  const details = {
+    or_number: detail("or_number"),
+    vendor_name: detail("vendor_name"),
+    payment_ref: detail("payment_ref"),
+    vendor_tin: detail("vendor_tin"),
+    project: detail("project"),
+    attendees: detail("attendees"),
+  };
+  for (const [name, value] of Object.entries(details) as [keyof typeof DETAIL_LIMITS, string][]) {
+    if (value.length > DETAIL_LIMITS[name]) {
+      return { error: `Please keep the ${DETAIL_LABELS[name]} under ${DETAIL_LIMITS[name]} characters.` };
+    }
+  }
+  if (details.vendor_tin && !/^[0-9][0-9 -]*$/.test(details.vendor_tin)) {
+    return { error: "The vendor TIN should be numbers (dashes are fine), e.g. 123-456-789-000." };
+  }
+  const paidVia = String(formData.get("paid_vendor_via") ?? "");
+  if (paidVia && !(PAID_VENDOR_METHODS as readonly string[]).includes(paidVia)) {
+    return { error: "Please choose how you paid the vendor, or leave it empty." };
+  }
+  // A reference only goes with GCash, Maya, Bank transfer, or Card; attendees only with Meals & Food.
+  const keepReference = METHODS_WITH_REFERENCE.includes(paidVia);
+  const keepAttendees = category === "Meals & Food";
   if (receiptPath && !receiptPath.startsWith(`${userId}/`)) {
     return { error: "That receipt photo doesn't belong to you." };
   }
@@ -73,6 +121,13 @@ function readFields(formData: FormData, userId: string): { error: string } | Exp
     amount_php: amount,
     note: note || null,
     needed_by: neededBy || null,
+    or_number: details.or_number || null,
+    vendor_name: details.vendor_name || null,
+    paid_vendor_via: paidVia || null,
+    payment_ref: keepReference ? details.payment_ref || null : null,
+    vendor_tin: details.vendor_tin || null,
+    project: details.project || null,
+    attendees: keepAttendees ? details.attendees || null : null,
     receiptPath,
   };
 }
@@ -142,4 +197,17 @@ export async function resubmitExpense(expenseId: string, formData: FormData): Pr
   }
 
   redirect("/");
+}
+
+// Has a receipt with this OR / Invoice number and vendor possibly been submitted already?
+// The database answers yes or no only, without showing anyone else's expense.
+export async function checkDuplicate(orNumber: string, vendor: string, exceptId?: string) {
+  if (!orNumber.trim() || !vendor.trim()) return false;
+  const { supabase } = await signedInUser();
+  const { data, error } = await supabase.rpc("possible_duplicate", {
+    or_no: orNumber,
+    vendor,
+    except_id: exceptId ?? null,
+  });
+  return !error && data === true;
 }
