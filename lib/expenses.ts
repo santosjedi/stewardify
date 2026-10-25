@@ -31,6 +31,7 @@ export type Decision = {
   old_status: Status;
   new_status: Status;
   comment: string | null;
+  kind: "decision" | "resubmission";
   created_at: string;
   decider: { full_name: string } | null;
 };
@@ -42,5 +43,5 @@ export const EXPENSE_COLUMNS =
   "id, expense_date, description, category, amount_php, note, status, receipt_path, submitted_by, review_comment, reviewed_at, created_at, " +
   "submitter:profiles!expenses_submitted_by_fkey(full_name), " +
   "reviewer:profiles!expenses_reviewed_by_fkey(full_name), " +
-  "decisions:expense_decisions(id, old_status, new_status, comment, created_at, " +
+  "decisions:expense_decisions(id, old_status, new_status, comment, kind, created_at, " +
   "decider:profiles!expense_decisions_decided_by_fkey(full_name))";

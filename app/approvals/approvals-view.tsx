@@ -6,7 +6,7 @@ import { EXPENSE_COLUMNS, type Expense } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
-import { Activity } from "../activity";
+import { Activity, PreviousFeedback } from "../activity";
 import { Header } from "../header";
 import { ReceiptThumbnail } from "../receipt-thumbnail";
 import { ChangeDecision } from "./change-decision";
@@ -93,6 +93,7 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
                     {e.submitter?.full_name ?? "Unknown"} · {formatDate(e.expense_date)} · {e.category}
                   </span>
                   {e.note && <span className={styles.note}>Note: {e.note}</span>}
+                  <PreviousFeedback expense={e} />
                   <Activity expense={e} />
                 </div>
                 <div className={pageStyles.right}>

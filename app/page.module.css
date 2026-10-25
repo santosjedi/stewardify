@@ -357,6 +357,46 @@
   color: var(--rejected-text);
 }
 
+/* "Previous feedback" and the rejection feedback on the edit page */
+.feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+  padding: 10px 14px;
+  border-left: 4px solid var(--orange);
+  border-radius: 10px;
+  background: var(--background);
+  font-size: 13px;
+}
+
+.feedbackTop {
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+
+.feedbackLabel {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* "Edit & resubmit" on a rejected expense */
+.resubmitLink {
+  width: fit-content;
+  margin-top: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.resubmitLink:hover {
+  background: var(--primary-hover);
+}
+
 /* ---------- Activity timeline (fold-out) ---------- */
 
 .activity {

@@ -31,8 +31,12 @@ export function Activity({ expense }: { expense: Expense }) {
         {decisions.map((d) => (
           <li key={d.id} className={`${styles.event} ${styles[`event_${d.new_status}`]}`}>
             <span className={styles.eventText}>
-              {d.new_status === "pending" ? "Moved back to pending" : LABELS[d.new_status]} by{" "}
-              {d.decider?.full_name ?? "an approver"}
+              {d.kind === "resubmission"
+                ? "Fixed and resubmitted"
+                : d.new_status === "pending"
+                  ? "Moved back to pending"
+                  : LABELS[d.new_status]}{" "}
+              by {d.decider?.full_name ?? (d.kind === "resubmission" ? "the submitter" : "an approver")}
               {d.old_status !== "pending" && d.new_status !== "pending" && (
                 <> (was {LABELS[d.old_status]})</>
               )}
@@ -43,5 +47,33 @@ export function Activity({ expense }: { expense: Expense }) {
         ))}
       </ol>
     </details>
+  );
+}
+
+// After a rejected expense is fixed and resubmitted, the rejection comment stays
+// visible as "Previous feedback" while it waits for review again.
+export function PreviousFeedback({ expense }: { expense: Expense }) {
+  if (expense.status !== "pending") {
+    return null;
+  }
+  const decisions = [...(expense.decisions ?? [])].sort((a, b) =>
+    a.created_at.localeCompare(b.created_at)
+  );
+  const last = decisions[decisions.length - 1];
+  if (last?.kind !== "resubmission") {
+    return null;
+  }
+  const rejection = decisions.findLast((d) => d.new_status === "rejected" && d.comment);
+  if (!rejection) {
+    return null;
+  }
+
+  return (
+    <p className={styles.feedback}>
+      <span className={styles.feedbackLabel}>
+        Previous feedback from {rejection.decider?.full_name ?? "an approver"}
+      </span>
+      <span className={styles.comment}>“{rejection.comment}”</span>
+    </p>
   );
 }

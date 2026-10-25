@@ -72,6 +72,23 @@
   cursor: pointer;
 }
 
+/* The current receipt, when fixing a rejected expense */
+.current {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.currentImage {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  object-fit: cover;
+}
+
 .optional {
   font-weight: 400;
   color: var(--muted);

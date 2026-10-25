@@ -6,7 +6,7 @@ import { EXPENSE_COLUMNS, type Expense, type Status } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
-import { Activity } from "./activity";
+import { Activity, PreviousFeedback } from "./activity";
 import { Header } from "./header";
 import { ReceiptThumbnail } from "./receipt-thumbnail";
 import styles from "./page.module.css";
@@ -37,14 +37,14 @@ async function Dashboard() {
           + Submit expense
         </Link>
       </div>
-      <Expenses showSubmitter={user.role === "approver"} />
+      <Expenses showSubmitter={user.role === "approver"} userId={user.id} />
     </>
   );
 }
 
 // Supabase's security rules decide which rows come back:
 // submitters get their own, approvers get everyone's.
-async function Expenses({ showSubmitter }: { showSubmitter: boolean }) {
+async function Expenses({ showSubmitter, userId }: { showSubmitter: boolean; userId: string }) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("expenses")
@@ -114,6 +114,12 @@ async function Expenses({ showSubmitter }: { showSubmitter: boolean }) {
                       <span className={styles.comment}>“{e.review_comment}”</span>
                     )}
                   </span>
+                )}
+                <PreviousFeedback expense={e} />
+                {e.status === "rejected" && e.submitted_by === userId && (
+                  <Link href={`/expenses/${e.id}/edit`} className={styles.resubmitLink}>
+                    Edit &amp; resubmit
+                  </Link>
                 )}
                 <Activity expense={e} />
               </div>

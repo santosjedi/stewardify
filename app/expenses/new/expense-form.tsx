@@ -4,10 +4,30 @@ import Link from "next/link";
 import { useState, useTransition, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { CATEGORIES, MAX_RECEIPT_BYTES, RECEIPT_TYPES } from "@/lib/expenses";
-import { createExpense } from "./actions";
+import { createExpense, resubmitExpense } from "./actions";
 import styles from "./expense-form.module.css";
 
-export function ExpenseForm({ userId, today }: { userId: string; today: string }) {
+// An expense being fixed and resubmitted after a rejection.
+export type ExistingExpense = {
+  id: string;
+  expense_date: string;
+  description: string;
+  category: string;
+  amount_php: number;
+  note: string | null;
+  receiptUrl: string | null;
+};
+
+// The submit form. With "existing", it edits a rejected expense and resubmits it instead.
+export function ExpenseForm({
+  userId,
+  today,
+  existing,
+}: {
+  userId: string;
+  today: string;
+  existing?: ExistingExpense;
+}) {
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -46,7 +66,9 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
       }
 
       // 2. Save the expense. On success, this goes back to the list.
-      const result = await createExpense(formData);
+      const result = existing
+        ? await resubmitExpense(existing.id, formData)
+        : await createExpense(formData);
       if (result?.error) {
         setError(result.error);
       }
@@ -57,7 +79,12 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
     <form onSubmit={handleSubmit} className={styles.form}>
       <label className={styles.field}>
         Date
-        <input name="expenseDate" type="date" defaultValue={today} required />
+        <input
+          name="expenseDate"
+          type="date"
+          defaultValue={existing?.expense_date ?? today}
+          required
+        />
       </label>
 
       <label className={styles.field}>
@@ -66,6 +93,7 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
           name="description"
           type="text"
           maxLength={200}
+          defaultValue={existing?.description}
           placeholder="e.g. Fare for home visits in Rizal"
           required
         />
@@ -74,7 +102,7 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
       <div className={styles.row}>
         <label className={styles.field}>
           Category
-          <select name="category" defaultValue="" required>
+          <select name="category" defaultValue={existing?.category ?? ""} required>
             <option value="" disabled>
               Choose…
             </option>
@@ -94,6 +122,7 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
             inputMode="decimal"
             min="0.01"
             step="0.01"
+            defaultValue={existing ? Number(existing.amount_php).toFixed(2) : undefined}
             placeholder="0.00"
             required
           />
@@ -108,13 +137,22 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
           name="note"
           rows={3}
           maxLength={1000}
+          defaultValue={existing?.note ?? undefined}
           placeholder="Anything the approver should know"
         />
       </label>
 
+      {existing?.receiptUrl && (
+        <div className={styles.current}>
+          <img src={existing.receiptUrl} alt="Current receipt" className={styles.currentImage} />
+          <span>Current receipt. Choose a new photo below to replace it.</span>
+        </div>
+      )}
+
       <label className={styles.field}>
         <span>
-          Receipt photo <span className={styles.optional}>(optional, up to 5 MB)</span>
+          {existing ? "Replace receipt photo" : "Receipt photo"}{" "}
+          <span className={styles.optional}>(optional, up to 5 MB)</span>
         </span>
         <input name="receipt" type="file" accept={RECEIPT_TYPES.join(",")} />
       </label>
@@ -126,7 +164,7 @@ export function ExpenseForm({ userId, today }: { userId: string; today: string }
           Cancel
         </Link>
         <button type="submit" className={styles.submit} disabled={pending}>
-          {pending ? "Submitting…" : "Submit expense"}
+          {pending ? "Submitting…" : existing ? "Resubmit for review" : "Submit expense"}
         </button>
       </div>
     </form>
