@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getCurrentUser } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
+import { signOut } from "./auth/actions";
 import styles from "./page.module.css";
 
 type Status = "pending" | "approved" | "rejected";
@@ -30,18 +32,41 @@ function formatDate(isoDate: string) {
 export default function Home() {
   return (
     <main className={styles.main}>
-      <h1 className={styles.title}>Stewardify</h1>
-      <Suspense fallback={<p className={styles.message}>Loading expenses…</p>}>
-        <Expenses />
+      <Suspense fallback={<p className={styles.message}>Loading…</p>}>
+        <Dashboard />
       </Suspense>
     </main>
   );
 }
 
-async function Expenses() {
-  // Load fresh data on every visit instead of a saved copy.
+async function Dashboard() {
+  // This part is different for each visit (it checks who is signed in and the time).
   await connection();
+  const user = await getCurrentUser();
 
+  return (
+    <>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Stewardify</h1>
+        <div className={styles.user}>
+          <span className={styles.userName}>{user.fullName}</span>
+          <span className={styles.role}>{user.role}</span>
+          <form action={signOut}>
+            <button type="submit" className={styles.signOut}>
+              Sign out
+            </button>
+          </form>
+        </div>
+      </header>
+      <Expenses />
+    </>
+  );
+}
+
+// Supabase's security rules decide which rows come back:
+// submitters get their own, approvers get everyone's.
+async function Expenses() {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("expenses")
     .select("id, expense_date, description, category, amount_php, status")

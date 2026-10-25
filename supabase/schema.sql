@@ -32,8 +32,8 @@ create table if not exists public.expenses (
   receipt_path   text,  -- where the photo is saved in the "receipts" bucket
   status         text not null default 'pending'
                  check (status in ('pending', 'approved', 'rejected')),
-  -- TODO (step 4): make submitted_by "not null" once logins exist.
-  -- It is optional for now so you can type test rows in by hand.
+  -- Optional for now so you can type test rows in by hand.
+  -- See the TODO in step4_accounts.sql.
   submitted_by   uuid references public.profiles (id) on delete set null,
   reviewed_by    uuid references public.profiles (id) on delete set null,
   review_comment text,
@@ -54,23 +54,8 @@ create index if not exists expenses_status_idx on public.expenses (status);
 alter table public.profiles enable row level security;
 alter table public.expenses enable row level security;
 
--- TODO (step 4): DELETE this temporary policy and replace it with real rules:
---   - submitters can see and add only their own expenses
---   - approvers can see all expenses and approve/reject them
---   - each person can see and edit their own profile
--- Right now ANYONE with the app's public key can read every expense.
--- Only put fake test data in this table until step 4.
-drop policy if exists "TEMPORARY: anyone can read expenses" on public.expenses;
-create policy "TEMPORARY: anyone can read expenses"
-  on public.expenses
-  for select
-  to anon, authenticated
-  using (true);
-
-grant select on public.expenses to anon, authenticated;
-
--- profiles has no policies yet, so the app cannot read or change it at all.
--- TODO (step 4): add profile policies.
+-- The rules for who can read expenses and profiles are in step4_accounts.sql.
+-- (Step 2 had a temporary "anyone can read expenses" rule; step 4 removed it.)
 
 
 -- ============================================================
@@ -85,5 +70,5 @@ values ('receipts', 'receipts', false, 5242880,
         array['image/jpeg', 'image/png', 'image/webp', 'image/heic'])
 on conflict (id) do nothing;
 
--- TODO (step 4): add storage policies so people can upload and view
--- their own receipts. Until then, nobody can upload through the app.
+-- No storage rules yet, so nobody can upload through the app.
+-- See the TODO in step4_accounts.sql.
