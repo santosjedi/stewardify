@@ -357,6 +357,76 @@
   color: var(--rejected-text);
 }
 
+/* ---------- Activity timeline (fold-out) ---------- */
+
+.activity {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.activitySummary {
+  width: fit-content;
+  color: var(--link);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0 2px 4px;
+  padding-left: 16px;
+  border-left: 2px solid var(--border);
+  list-style: none;
+}
+
+.event {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+/* A dot on the line for each event, colored by the new status */
+.event::before {
+  content: "";
+  position: absolute;
+  left: -22px;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.event_pending::before {
+  background: var(--gold);
+}
+
+.event_approved::before {
+  background: var(--approved-text);
+}
+
+.event_rejected::before {
+  background: var(--rejected-text);
+}
+
+.eventText {
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.eventTime {
+  color: var(--muted);
+}
+
+.eventComment {
+  color: var(--foreground);
+  font-style: italic;
+}
+
 /* ---------- Receipt thumbnail and the larger view ---------- */
 
 .thumbnailButton {

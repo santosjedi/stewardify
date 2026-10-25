@@ -19,13 +19,28 @@ export type Expense = {
   submitted_by: string;
   review_comment: string | null;
   reviewed_at: string | null;
+  created_at: string;
   submitter: { full_name: string } | null;
   reviewer: { full_name: string } | null;
+  decisions: Decision[];
+};
+
+// One entry in an expense's activity log.
+export type Decision = {
+  id: number;
+  old_status: Status;
+  new_status: Status;
+  comment: string | null;
+  created_at: string;
+  decider: { full_name: string } | null;
 };
 
 // The columns to fetch for an expense, plus the submitter's and reviewer's
-// names from profiles (through the "submitted by" and "reviewed by" links).
+// names from profiles (through the "submitted by" and "reviewed by" links),
+// and its activity log with the name of whoever made each decision.
 export const EXPENSE_COLUMNS =
-  "id, expense_date, description, category, amount_php, note, status, receipt_path, submitted_by, review_comment, reviewed_at, " +
+  "id, expense_date, description, category, amount_php, note, status, receipt_path, submitted_by, review_comment, reviewed_at, created_at, " +
   "submitter:profiles!expenses_submitted_by_fkey(full_name), " +
-  "reviewer:profiles!expenses_reviewed_by_fkey(full_name)";
+  "reviewer:profiles!expenses_reviewed_by_fkey(full_name), " +
+  "decisions:expense_decisions(id, old_status, new_status, comment, created_at, " +
+  "decider:profiles!expense_decisions_decided_by_fkey(full_name))";

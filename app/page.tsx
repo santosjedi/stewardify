@@ -6,6 +6,7 @@ import { EXPENSE_COLUMNS, type Expense, type Status } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
+import { Activity } from "./activity";
 import { Header } from "./header";
 import { ReceiptThumbnail } from "./receipt-thumbnail";
 import styles from "./page.module.css";
@@ -114,6 +115,7 @@ async function Expenses({ showSubmitter }: { showSubmitter: boolean }) {
                     )}
                   </span>
                 )}
+                <Activity expense={e} />
               </div>
               <div className={styles.right}>
                 <span className={styles.amount}>{pesos.format(Number(e.amount_php))}</span>

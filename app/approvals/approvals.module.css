@@ -164,6 +164,93 @@
   cursor: default;
 }
 
+/* "Change decision" on reviewed expenses */
+.reviewLine {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.reviewLine .reviewForm {
+  align-self: stretch;
+}
+
+.changeButton,
+.secondary {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.changeButton:hover,
+.secondary:hover {
+  background: var(--background);
+}
+
+.secondary {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.secondary:disabled {
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
+  cursor: default;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: none;
+}
+
+.choicesLabel {
+  width: 100%;
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.choice:has(input:checked) {
+  border-color: var(--blue);
+  background: var(--background);
+  font-weight: 600;
+}
+
+.choice input {
+  accent-color: var(--primary);
+}
+
+.confirm {
+  padding: 12px 14px;
+  border-left: 4px solid var(--orange);
+  border-radius: 10px;
+  background: var(--background);
+  font-size: 14px;
+  color: var(--foreground);
+}
+
 @media (max-width: 560px) {
   .item {
     padding: 16px;

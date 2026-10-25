@@ -6,8 +6,10 @@ import { EXPENSE_COLUMNS, type Expense } from "@/lib/expenses";
 import { formatDate, formatDateTime, pesos } from "@/lib/format";
 import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
+import { Activity } from "../activity";
 import { Header } from "../header";
 import { ReceiptThumbnail } from "../receipt-thumbnail";
+import { ChangeDecision } from "./change-decision";
 import { ReviewForm } from "./review-form";
 import pageStyles from "../page.module.css";
 import styles from "./approvals.module.css";
@@ -91,6 +93,7 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
                     {e.submitter?.full_name ?? "Unknown"} · {formatDate(e.expense_date)} · {e.category}
                   </span>
                   {e.note && <span className={styles.note}>Note: {e.note}</span>}
+                  <Activity expense={e} />
                 </div>
                 <div className={pageStyles.right}>
                   <span className={pageStyles.amount}>{pesos.format(Number(e.amount_php))}</span>
@@ -110,14 +113,19 @@ export async function ApprovalsView({ view }: { view: "queue" | "history" }) {
                 ))}
 
               {view === "history" && (
-                <p className={styles.reviewLine}>
-                  {e.status === "approved" ? "Approved" : "Rejected"} by{" "}
-                  {e.reviewer?.full_name ?? "an approver"}
-                  {e.reviewed_at && ` · ${formatDateTime(e.reviewed_at)}`}
-                  {e.review_comment && (
-                    <span className={pageStyles.comment}> — “{e.review_comment}”</span>
+                <div className={styles.reviewLine}>
+                  <p>
+                    {e.status === "approved" ? "Approved" : "Rejected"} by{" "}
+                    {e.reviewer?.full_name ?? "an approver"}
+                    {e.reviewed_at && ` · ${formatDateTime(e.reviewed_at)}`}
+                    {e.review_comment && (
+                      <span className={pageStyles.comment}> — “{e.review_comment}”</span>
+                    )}
+                  </p>
+                  {e.submitted_by !== user.id && (
+                    <ChangeDecision key={`${e.id}-${e.status}`} expenseId={e.id} current={e.status} />
                   )}
-                </p>
+                </div>
               )}
             </li>
           ))}
