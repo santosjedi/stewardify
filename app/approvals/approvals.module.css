@@ -1,0 +1,136 @@
+/* Two summary cards: total pending and total approved */
+.summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Queue / History tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab,
+.tabActive {
+  padding: 8px 12px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.tabActive {
+  border-bottom-color: var(--foreground);
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+/* One card per expense */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.note {
+  font-size: 13px;
+  color: var(--foreground);
+}
+
+.ownNotice,
+.reviewLine {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Approve / Reject form */
+.reviewForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.commentBox {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.error {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--rejected-bg);
+  color: var(--rejected-text);
+  font-size: 13px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.approve,
+.reject {
+  padding: 9px 16px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.approve {
+  border: 1px solid var(--approved-text);
+  background: var(--approved-bg);
+  color: var(--approved-text);
+}
+
+.reject {
+  border: 1px solid var(--rejected-text);
+  background: var(--rejected-bg);
+  color: var(--rejected-text);
+}
+
+.approve:disabled,
+.reject:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@media (max-width: 560px) {
+  .buttons > button {
+    flex: 1;
+  }
+}

@@ -2,35 +2,13 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
+import { EXPENSE_COLUMNS, type Expense, type Status } from "@/lib/expenses";
+import { formatDate, formatDateTime, pesos } from "@/lib/format";
+import { getReceiptUrls } from "@/lib/receipts";
 import { createClient } from "@/lib/supabase/server";
-import { signOut } from "./auth/actions";
+import { Header } from "./header";
 import { ReceiptThumbnail } from "./receipt-thumbnail";
 import styles from "./page.module.css";
-
-type Status = "pending" | "approved" | "rejected";
-
-type Expense = {
-  id: string;
-  expense_date: string;
-  description: string;
-  category: string;
-  amount_php: number;
-  status: Status;
-  receipt_path: string | null;
-};
-
-// ₱1,200.00
-const pesos = new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP" });
-
-// Oct 25, 2026 (UTC so the date never shifts by a day)
-function formatDate(isoDate: string) {
-  return new Date(isoDate).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
 
 export default function Home() {
   return (
@@ -49,18 +27,7 @@ async function Dashboard() {
 
   return (
     <>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Stewardify</h1>
-        <div className={styles.user}>
-          <span className={styles.userName}>{user.fullName}</span>
-          <span className={styles.role}>{user.role}</span>
-          <form action={signOut}>
-            <button type="submit" className={styles.signOut}>
-              Sign out
-            </button>
-          </form>
-        </div>
-      </header>
+      <Header user={user} active="expenses" />
       <div className={styles.toolbar}>
         <h2 className={styles.heading}>
           {user.role === "approver" ? "All expenses" : "My expenses"}
@@ -69,38 +36,40 @@ async function Dashboard() {
           + Submit expense
         </Link>
       </div>
-      <Expenses />
+      <Expenses showSubmitter={user.role === "approver"} />
     </>
   );
 }
 
 // Supabase's security rules decide which rows come back:
 // submitters get their own, approvers get everyone's.
-async function Expenses() {
+async function Expenses({ showSubmitter }: { showSubmitter: boolean }) {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("expenses")
-    .select("id, expense_date, description, category, amount_php, status, receipt_path")
+    .select(EXPENSE_COLUMNS)
     .order("created_at", { ascending: false });
 
   if (error) {
     return <p className={styles.message}>Could not load expenses: {error.message}</p>;
   }
 
-  const expenses = data as Expense[];
+  const expenses = data as unknown as Expense[];
   const total = expenses.reduce((sum, e) => sum + Number(e.amount_php), 0);
   const count = (status: Status) => expenses.filter((e) => e.status === status).length;
-
-  // Receipts are private, so ask for temporary links (good for 1 hour) to show them.
-  const paths = expenses.map((e) => e.receipt_path).filter((p): p is string => Boolean(p));
-  const receiptUrls = new Map<string, string>();
-  if (paths.length > 0) {
-    const { data: signed } = await supabase.storage.from("receipts").createSignedUrls(paths, 60 * 60);
-    signed?.forEach((s) => s.path && s.signedUrl && receiptUrls.set(s.path, s.signedUrl));
-  }
+  const receiptUrls = await getReceiptUrls(supabase, expenses.map((e) => e.receipt_path));
 
   return (
     <>
+      {showSubmitter && count("pending") > 0 && (
+        <Link href="/approvals" className={styles.reviewBanner}>
+          <span>
+            {count("pending")} {count("pending") === 1 ? "expense is" : "expenses are"} waiting for
+            review
+          </span>
+          <span className={styles.reviewBannerAction}>Go to approval queue →</span>
+        </Link>
+      )}
       <section className={styles.summary}>
         <div className={styles.card}>
           <span className={styles.cardLabel}>Total</span>
@@ -132,8 +101,19 @@ async function Expenses() {
               <div className={styles.details}>
                 <span className={styles.description}>{e.description}</span>
                 <span className={styles.meta}>
+                  {showSubmitter && e.submitter && `${e.submitter.full_name} · `}
                   {formatDate(e.expense_date)} · {e.category}
                 </span>
+                {e.status !== "pending" && (
+                  <span className={styles.review}>
+                    {e.status === "approved" ? "Approved" : "Rejected"} by{" "}
+                    {e.reviewer?.full_name ?? "an approver"}
+                    {e.reviewed_at && ` · ${formatDateTime(e.reviewed_at)}`}
+                    {e.review_comment && (
+                      <span className={styles.comment}>“{e.review_comment}”</span>
+                    )}
+                  </span>
+                )}
               </div>
               <div className={styles.right}>
                 <span className={styles.amount}>{pesos.format(Number(e.amount_php))}</span>

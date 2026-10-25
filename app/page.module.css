@@ -16,8 +16,42 @@
   margin-bottom: 24px;
 }
 
+.brandRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+}
+
 .title {
   font-size: 28px;
+}
+
+/* Links between pages (approvers only) */
+.nav {
+  display: flex;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.navLink,
+.navActive {
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--muted);
+}
+
+.navLink:hover {
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+.navActive {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-weight: 500;
 }
 
 .user {
@@ -69,6 +103,25 @@
   background: var(--foreground);
   color: var(--background);
   font-size: 14px;
+  font-weight: 600;
+}
+
+/* Approvers: "2 expenses are waiting for review" */
+.reviewBanner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--pending-bg);
+  color: var(--pending-text);
+  font-size: 14px;
+}
+
+.reviewBannerAction {
   font-weight: 600;
 }
 
@@ -141,6 +194,20 @@
 .meta {
   font-size: 13px;
   color: var(--muted);
+}
+
+/* Review result under an expense: "Approved by … · comment" */
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.comment {
+  color: var(--foreground);
+  font-style: italic;
 }
 
 .right {
